@@ -28,39 +28,23 @@
     background:var(--canvas);
     color:var(--text);
     font-family:'Inter',sans-serif;
-    display:flex;
     min-height:100vh;
   }
   h1,h2,h3{font-family:'Space Grotesk',sans-serif;}
   .num{font-family:'IBM Plex Mono',monospace;}
 
-  /* Sidebar */
-  .sidebar{
-    width:220px;flex-shrink:0;background:var(--navy);color:#C9D3E8;
-    padding:28px 18px;position:sticky;top:0;height:100vh;overflow-y:auto;
-  }
-  .brand{display:flex;align-items:center;gap:10px;margin-bottom:34px;padding:0 8px;}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
   .brand-mark{
-    width:34px;height:34px;border-radius:9px;
+    width:32px;height:32px;border-radius:9px;
     background:linear-gradient(135deg,var(--primary),var(--violet));
     display:flex;align-items:center;justify-content:center;
-    font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:15px;flex-shrink:0;
+    font-family:'Space Grotesk',sans-serif;font-weight:700;color:#fff;font-size:14px;flex-shrink:0;
   }
-  .brand-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:17px;color:#fff;}
-  .brand-sub{font-size:10.5px;color:#8391AC;margin-top:1px;letter-spacing:.4px;text-transform:uppercase;}
-  .nav-label{font-size:10.5px;text-transform:uppercase;letter-spacing:.8px;color:#5D6A88;margin:22px 8px 10px;font-weight:600;}
-  .nav-item{
-    display:flex;align-items:center;gap:11px;padding:9px 10px;border-radius:9px;
-    font-size:13.5px;font-weight:500;color:#B7C1D9;cursor:pointer;text-decoration:none;
-    transition:background .15s, color .15s;margin-bottom:2px;
-  }
-  .nav-item:hover{background:var(--navy-2);color:#fff;}
-  .nav-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
-  .sidebar-foot{margin-top:26px;padding:13px 12px;border-radius:11px;background:var(--navy-2);font-size:11.5px;color:#8391AC;line-height:1.5;}
-  .sidebar-foot b{color:#DCE3F0;font-weight:600;}
+  .brand-name{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:15px;color:var(--text);}
+  .brand-sub{font-size:10px;color:var(--muted);margin-top:1px;letter-spacing:.4px;text-transform:uppercase;}
 
   /* Main */
-  .main{flex:1;min-width:0;padding:32px 40px 50px;}
+  .main{max-width:1400px;margin:0 auto;padding:32px 40px 50px;}
   .topbar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:14px;}
   .topbar h1{font-size:25px;margin:0 0 4px;font-weight:700;letter-spacing:-.2px;}
   .topbar p{margin:0;color:var(--muted);font-size:13.5px;}
@@ -101,7 +85,8 @@
     font-size:10.5px;font-weight:600;color:var(--accent,var(--primary));
     background:#EFF4FE;padding:3px 8px;border-radius:6px;text-transform:uppercase;letter-spacing:.3px;
   }
-  .chart-wrap{position:relative;height:210px;}
+  .chart-wrap{position:relative;width:100%;height:210px;}
+  .chart-wrap canvas{display:block !important;width:100% !important;height:100% !important;}
 
   .range-select{
     font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--primary);
@@ -138,29 +123,17 @@
 </head>
 <body>
 
-<aside class="sidebar">
-  <div class="brand">
-    <div class="brand-mark">D</div>
-    <div>
-      <div class="brand-name">DiYA</div>
-      <div class="brand-sub">Analytics Console</div>
-    </div>
-  </div>
-
-  <div class="nav-label">Overview</div>
-  <a class="nav-item" href="#usage"><span class="nav-dot" style="background:var(--coral)"></span>Usage &amp; Website</a>
-  <a class="nav-item" href="#dashboards"><span class="nav-dot" style="background:var(--primary)"></span>Dashboard Insights</a>
-
-  <div class="sidebar-foot">
-    <b>Last sync</b> 2 min ago<br>
-    All services <span style="color:#4ADE9C">operational</span>
-  </div>
-</aside>
-
 <main class="main">
 
   <div class="topbar">
-    <div>
+    <div class="topbar-heading">
+      <div class="brand">
+        <div class="brand-mark">D</div>
+        <div>
+          <div class="brand-name">DiYA</div>
+          <div class="brand-sub">Analytics Console</div>
+        </div>
+      </div>
       <h1>Dashboard Insights</h1>
       <p>Platform usage at a glance, then a closer look at how dashboards are performing.</p>
     </div>
@@ -454,25 +427,25 @@ function buildCharts(){
   chHits = new Chart(document.getElementById('chHits'), {
     type:'line',
     data:{ labels:hitsByRange.all.labels, datasets:[{data:hitsByRange.all.data, borderColor:'#F0A93C', backgroundColor:'rgba(240,169,60,0.12)', fill:true, tension:.35, pointRadius:3, pointBackgroundColor:'#F0A93C'}]},
-    options:{plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
   });
 
   chMostVisited = new Chart(document.getElementById('chMostVisited'), {
     type:'bar',
     data:{ labels:pageLabelsShort, datasets:[{data:scaled(pageBaseWeek,'all'), backgroundColor:'#14B8A6', borderRadius:6, maxBarThickness:34}]},
-    options:{indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{grid:gridLine, beginAtZero:true}, y:{grid:{display:false}}}}
+    options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{grid:gridLine, beginAtZero:true}, y:{grid:{display:false}}}}
   });
 
   chMostViewed = new Chart(document.getElementById('chMostViewed'), {
     type:'bar',
     data:{ labels:dashLabelsShort, datasets:[{data:scaled(dashBaseWeek,'all'), backgroundColor:'#2F6FED', borderRadius:6, maxBarThickness:34}]},
-    options:{plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
+    options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
   });
 
   chRatings = new Chart(document.getElementById('chRatings'), {
     type:'doughnut',
     data:{ labels:['5 stars','4 stars','3 stars','2 stars','1 star'], datasets:[{data:scaled(ratingsBaseWeek,'all'), backgroundColor:['#2F6FED','#6FA0F5','#B9CDF5','#F0A93C','#F0615F'], borderWidth:0}]},
-    options:{cutout:'62%', plugins:{legend:{position:'bottom', labels:{boxWidth:9, padding:14}}}}
+    options:{responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{legend:{position:'bottom', labels:{boxWidth:9, padding:14}}}}
   });
 }
 
@@ -621,6 +594,20 @@ const TABLE_RANGE_HANDLERS = {
 };
 
 buildCharts();
+
+// Chart.js can measure its container width before CSS Grid finishes sizing the
+// track, which bakes in a too-narrow canvas that never self-corrects. Force a
+// resize pass on the next frame, and again once web fonts swap in (which can
+// also shift column widths), to make sure every chart fills its card.
+function resizeAllCharts(){
+  [chHits, chMostVisited, chMostViewed, chRatings].forEach(c => c && c.resize());
+}
+requestAnimationFrame(() => requestAnimationFrame(resizeAllCharts));
+window.addEventListener('load', resizeAllCharts);
+if (document.fonts && document.fonts.ready) {
+  document.fonts.ready.then(resizeAllCharts);
+}
+window.addEventListener('resize', resizeAllCharts);
 renderPageHitTable('all');
 renderUserPageHitTable('all');
 renderFavoritedTable('all');
