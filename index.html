@@ -58,6 +58,12 @@
 
   .section-heading{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;}
   .section-heading h2{font-size:17px;margin:0;font-weight:700;}
+
+  .kpi-group{margin-bottom:22px;}
+  .kpi-group-heading{display:flex;align-items:center;gap:8px;margin:0 0 12px;}
+  .kpi-group-dot{width:9px;height:9px;border-radius:50%;background:var(--group-accent);flex-shrink:0;}
+  .kpi-group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text);}
+  .kpi-group-count{font-size:11px;color:var(--muted);font-weight:500;}
   .section-desc{color:var(--muted);font-size:13px;margin:8px 0 18px;max-width:640px;}
 
   .divider{height:1px;background:var(--line);margin:34px 0 30px;}
@@ -136,67 +142,92 @@
     <div class="refresh-pill"><span class="pulse"></span> Live &middot; updated 09:41</div>
   </div>
 
-  <!-- ===================== KPI CARDS (everything up front) ===================== -->
-  <div class="grid g-cards" style="margin-bottom:16px;">
-    <div class="card kpi" style="--accent:var(--coral)">
-      <div class="kpi-label">Active Users Today</div>
-      <div class="kpi-value num">312</div>
-      <div class="kpi-delta up">&#9650; 5.8% vs yesterday</div>
+  <!-- ===================== KPI CARDS (grouped: System vs Dashboard) ===================== -->
+
+  <!-- System Usage group — platform-level traffic & users -->
+  <div class="kpi-group" style="--group-accent:var(--primary)">
+    <div class="kpi-group-heading">
+      <span class="kpi-group-dot"></span>
+      <span class="kpi-group-title">System Usage</span>
+      <span class="kpi-group-count">&middot; platform traffic &amp; users</span>
     </div>
-    <div class="card kpi" style="--accent:var(--coral)">
-      <div class="kpi-label">Avg. Daily Active Users <span class="sub">(7d)</span></div>
-      <div class="kpi-value num">268</div>
-      <div class="kpi-delta flat">Weekday avg</div>
+    <div class="grid g-cards">
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Active Users Today</div>
+        <div class="kpi-value num">312</div>
+        <div class="kpi-delta up">&#9650; 5.8% vs yesterday</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Avg. Daily Active Users <span class="sub">(7d)</span></div>
+        <div class="kpi-value num">268</div>
+        <div class="kpi-delta flat">Weekday avg</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Total Registered Users</div>
+        <div class="kpi-value num">2,340</div>
+        <div class="kpi-delta up">&#9650; 4.1% this month</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Total Hits Today</div>
+        <div class="kpi-value num">5,842</div>
+        <div class="kpi-delta up">&#9650; 7.2% vs yesterday</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Avg. Hits Per Day</div>
+        <div class="kpi-value num">4,960</div>
+        <div class="kpi-delta flat">Trailing 30 days</div>
+      </div>
     </div>
-    <div class="card kpi" style="--accent:var(--teal)">
-      <div class="kpi-label">Total Registered Users</div>
-      <div class="kpi-value num">2,340</div>
-      <div class="kpi-delta up">&#9650; 4.1% this month</div>
+  </div>
+
+  <!-- Dashboard Performance group — dashboard-level metrics -->
+  <div class="kpi-group" style="--group-accent:var(--teal)">
+    <div class="kpi-group-heading">
+      <span class="kpi-group-dot"></span>
+      <span class="kpi-group-title">Dashboard Performance</span>
+      <span class="kpi-group-count">&middot; dashboard-level metrics</span>
     </div>
-    <div class="card kpi" style="--accent:var(--amber)">
-      <div class="kpi-label">Total Hits Today</div>
-      <div class="kpi-value num">5,842</div>
-      <div class="kpi-delta up">&#9650; 7.2% vs yesterday</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--violet)">
-      <div class="kpi-label">Avg. Hits Per Day</div>
-      <div class="kpi-value num">4,960</div>
-      <div class="kpi-delta flat">Trailing 30 days</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--primary)">
-      <div class="kpi-label">Total Dashboards</div>
-      <div class="kpi-value num">128</div>
-      <div class="kpi-delta up">&#9650; 6 added this month</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--primary)">
-      <div class="kpi-label">Active Dashboards</div>
-      <div class="kpi-value num">94</div>
-      <div class="kpi-delta flat">73% of total</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--teal)">
-      <div class="kpi-label">Total Views <span class="sub">(All time)</span></div>
-      <div class="kpi-value num">182,400</div>
-      <div class="kpi-delta up">&#9650; 3.4% this month</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--teal)">
-      <div class="kpi-label">Avg. Views per Dashboard</div>
-      <div class="kpi-value num">1,425</div>
-      <div class="kpi-delta flat">Across 128 dashboards</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--amber)">
-      <div class="kpi-label">Avg. Rating</div>
-      <div class="kpi-value num">4.3<span style="font-size:15px;color:var(--muted)">/5</span></div>
-      <div class="kpi-delta up">&#9650; 0.2 vs last quarter</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--amber)">
-      <div class="kpi-label">Total Favorites</div>
-      <div class="kpi-value num">3,210</div>
-      <div class="kpi-delta flat">25 avg per dashboard</div>
-    </div>
-    <div class="card kpi" style="--accent:var(--violet)">
-      <div class="kpi-label">New This Month</div>
-      <div class="kpi-value num">6</div>
-      <div class="kpi-delta flat">4 published, 2 Inactive</div>
+    <div class="grid g-cards">
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Total Dashboards</div>
+        <div class="kpi-value num">128</div>
+        <div class="kpi-delta up">&#9650; 6 added this month</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Active Dashboards</div>
+        <div class="kpi-value num">94</div>
+        <div class="kpi-delta flat">73% of total</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Total Views <span class="sub">(All time)</span></div>
+        <div class="kpi-value num">182,400</div>
+        <div class="kpi-delta up">&#9650; 3.4% this month</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Avg. Views per Dashboard</div>
+        <div class="kpi-value num">1,425</div>
+        <div class="kpi-delta flat">Across 128 dashboards</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Avg. Rating</div>
+        <div class="kpi-value num">4.3<span style="font-size:15px;color:var(--muted)">/5</span></div>
+        <div class="kpi-delta up">&#9650; 0.2 vs last quarter</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Total Favorites</div>
+        <div class="kpi-value num">3,210</div>
+        <div class="kpi-delta flat">25 avg per dashboard</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">New This Month</div>
+        <div class="kpi-value num">6</div>
+        <div class="kpi-delta flat">4 published, 2 in draft</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Draft / Pending Review</div>
+        <div class="kpi-value num">14</div>
+        <div class="kpi-delta down">&#9660; 3 vs last month</div>
+      </div>
     </div>
   </div>
 
