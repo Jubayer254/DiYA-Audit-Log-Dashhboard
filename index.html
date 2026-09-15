@@ -15,7 +15,7 @@
     --line:#E3E8F0;
     --text:#101A2E;
     --muted:#6B7686;
-    --primary:#2F6FED;
+    --primary:#FC0083;
     --teal:#14B8A6;
     --amber:#F0A93C;
     --coral:#F0615F;
@@ -104,13 +104,13 @@
   }
 
   .range-select{
-    font-family:'Inter',sans-serif;font-size:11px;font-weight:600;color:var(--primary);
-    background:#EFF4FE url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%232F6FED'/></svg>") no-repeat right 9px center;
+    font-family:'Inter',sans-serif;font-size:11px;font-weight:600;
+    background:#EFF4FE url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6'><path d='M0 0l5 6 5-6z' fill='%23FC0083'/></svg>") no-repeat right 9px center;
     border:none;border-radius:6px;padding:5px 24px 5px 9px;cursor:pointer;
     -webkit-appearance:none;appearance:none;
   }
-  .range-select:hover{background-color:#E2ECFE;}
-  .range-select:focus{outline:2px solid var(--primary);outline-offset:1px;}
+  /* .range-select:hover{background-color:#E2ECFE;} */
+  /* .range-select:focus{outline:2px solid var(--primary);outline-offset:1px;} */
 
   table{width:100%;border-collapse:collapse;font-size:12.6px;}
   thead th{
@@ -128,7 +128,7 @@
   .badge.shared{background:#F5F0FF;color:#7A6BD6;}
   .badge.archived{background:#FCEAEA;color:#D24949;}
   .badge.cloned{background:#FFF3E0;color:#C7841E;}
-  .project-tag{font-size:10.2px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;white-space:nowrap;background:#EEF3FC;color:#3E6FD9;margin:1px 3px 1px 0;}
+  .project-tag{font-size:10.2px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;white-space:nowrap;background:#f7dde5;color:#FC0083;margin:1px 3px 1px 0;}
   .person-row{display:flex;align-items:center;gap:9px;}
   .avatar{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.2px;font-weight:700;color:#fff;}
   .person-meta .full-name{font-weight:600;font-size:12.6px;line-height:1.3;}
@@ -143,17 +143,10 @@
 
   <div class="topbar">
     <div class="topbar-heading">
-      <div class="brand">
-        <div class="brand-mark">D</div>
-        <div>
-          <div class="brand-name">DiYA</div>
-          <div class="brand-sub">Analytics Console</div>
-        </div>
-      </div>
-      <h1>Dashboard Insights</h1>
+      <h1>DiYA Application Insights</h1>
       <p>Platform usage and dashboard performance, all in one view.</p>
     </div>
-    <div class="refresh-pill"><span class="pulse"></span> Live &middot; updated 09:41</div>
+    <div class="refresh-pill"><span class="pulse"></span> Last Updated Sep 15, 2026, 7:39 AM</div>
   </div>
 
   <!-- ===================== KPI CARDS (grouped: System vs Dashboard) ===================== -->
@@ -163,7 +156,7 @@
     <div class="kpi-group-heading">
       <span class="kpi-group-dot"></span>
       <span class="kpi-group-title">System Usage</span>
-      <span class="kpi-group-count">&middot; platform traffic &amp; users</span>
+      <span class="kpi-group-count">&middot; Platform Traffic &amp; Users</span>
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--primary)">
@@ -201,7 +194,7 @@
     <div class="kpi-group-heading">
       <span class="kpi-group-dot"></span>
       <span class="kpi-group-title">Dashboard Performance</span>
-      <span class="kpi-group-count">&middot; dashboard-level metrics</span>
+      <span class="kpi-group-count">&middot; Dashboard-Level Metrics</span>
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--teal)">
@@ -604,25 +597,25 @@ if (typeof Chart === 'undefined') {
     function buildCharts(){
       chHits = new Chart(document.getElementById('chHits'), {
         type:'line',
-        data:{ labels:hitsByRange.all.labels, datasets:[{data:hitsByRange.all.data, borderColor:'#F0A93C', backgroundColor:'rgba(240,169,60,0.12)', fill:true, tension:.35, pointRadius:3, pointBackgroundColor:'#F0A93C'}]},
+        data:{ labels:hitsByRange.all.labels, datasets:[{data:hitsByRange.all.data, borderColor:'#FC0083', backgroundColor:'rgba(252, 0, 131,0.12)', fill:true, tension:.35, pointRadius:3, pointBackgroundColor:'#FC0083'}]},
         options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
       });
 
       chMostVisited = new Chart(document.getElementById('chMostVisited'), {
         type:'bar',
-        data:{ labels:pageLabelsShort, datasets:[{data:scaled(pageBaseWeek,'all'), backgroundColor:'#14B8A6', borderRadius:6, maxBarThickness:34}]},
+        data:{ labels:pageLabelsShort, datasets:[{data:scaled(pageBaseWeek,'all'), backgroundColor:'#FC0083', borderRadius:6, maxBarThickness:34}]},
         options:{responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{legend:{display:false}}, scales:{x:{grid:gridLine, beginAtZero:true}, y:{grid:{display:false}}}}
       });
 
       chMostViewed = new Chart(document.getElementById('chMostViewed'), {
         type:'bar',
-        data:{ labels:dashLabelsShort, datasets:[{data:scaled(dashBaseWeek,'all'), backgroundColor:'#2F6FED', borderRadius:6, maxBarThickness:34}]},
+        data:{ labels:dashLabelsShort, datasets:[{data:scaled(dashBaseWeek,'all'), backgroundColor:'#FC0083', borderRadius:6, maxBarThickness:34}]},
         options:{responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{x:{grid:{display:false}}, y:{grid:gridLine, beginAtZero:true}}}
       });
 
       chRatings = new Chart(document.getElementById('chRatings'), {
         type:'doughnut',
-        data:{ labels:['5 stars','4 stars','3 stars','2 stars','1 star'], datasets:[{data:scaled(ratingsBaseWeek,'all'), backgroundColor:['#2F6FED','#6FA0F5','#B9CDF5','#F0A93C','#F0615F'], borderWidth:0}]},
+        data:{ labels:['5 stars','4 stars','3 stars','2 stars','1 star'], datasets:[{data:scaled(ratingsBaseWeek,'all'), backgroundColor:['#FC0083','#FF5BA9','#C44BCE','#7165E8','#2F6FED'], borderWidth:0}]},
         options:{responsive:true, maintainAspectRatio:false, cutout:'62%', plugins:{legend:{position:'bottom', labels:{boxWidth:9, padding:14}}}}
       });
     }
