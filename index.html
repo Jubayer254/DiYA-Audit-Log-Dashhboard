@@ -68,6 +68,18 @@
 
   .divider{height:1px;background:var(--line);margin:34px 0 30px;}
 
+  .insight-list{list-style:none;margin:0 0 20px;padding:0;display:flex;flex-direction:column;gap:10px;}
+  .insight-list:last-child{margin-bottom:0;}
+  .insight-list li{display:flex;align-items:flex-start;gap:10px;font-size:13px;line-height:1.45;color:var(--text);}
+  .insight-icon{flex-shrink:0;width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;margin-top:1px;}
+  .insight-icon.good{background:#E4F9F3;color:#0E9C86;}
+  .insight-icon.watch{background:#FCEAEA;color:#D24949;}
+  .insight-subheading{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin:0 0 10px;}
+  .insight-columns{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  @media (max-width:700px){.insight-columns{grid-template-columns:1fr;}}
+  .insight-groups{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;}
+  @media (max-width:900px){.insight-groups{grid-template-columns:1fr;}}
+
   .grid{display:grid;gap:16px;}
   .g-cards{grid-template-columns:repeat(auto-fit,minmax(175px,1fr));}
   .g-2{grid-template-columns:1.1fr 1fr;}
@@ -77,6 +89,7 @@
   .kpi{border-left:4px solid var(--accent,var(--primary));padding-left:16px;}
   .kpi-label{font-size:11.5px;color:var(--muted);font-weight:500;margin-bottom:9px;}
   .kpi-value{font-size:27px;font-weight:600;line-height:1;}
+  .kpi-value-text{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;line-height:1.25;}
   .kpi-delta{font-size:11px;margin-top:8px;font-weight:600;}
   .up{color:var(--teal);}
   .down{color:var(--coral);}
@@ -115,6 +128,7 @@
   .badge.shared{background:#F5F0FF;color:#7A6BD6;}
   .badge.archived{background:#FCEAEA;color:#D24949;}
   .badge.cloned{background:#FFF3E0;color:#C7841E;}
+  .project-tag{font-size:10.2px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;white-space:nowrap;background:#EEF3FC;color:#3E6FD9;margin:1px 3px 1px 0;}
   .person-row{display:flex;align-items:center;gap:9px;}
   .avatar{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.2px;font-weight:700;color:#fff;}
   .person-meta .full-name{font-weight:600;font-size:12.6px;line-height:1.3;}
@@ -180,6 +194,8 @@
     </div>
   </div>
 
+  <div class="divider"></div>
+
   <!-- Dashboard Performance group — dashboard-level metrics -->
   <div class="kpi-group" style="--group-accent:var(--teal)">
     <div class="kpi-group-heading">
@@ -189,14 +205,9 @@
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Dashboards</div>
+        <div class="kpi-label">Dashboards</div>
         <div class="kpi-value num">128</div>
-        <div class="kpi-delta up">&#9650; 6 added this month</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Active Dashboards</div>
-        <div class="kpi-value num">94</div>
-        <div class="kpi-delta flat">73% of total</div>
+        <div class="kpi-delta flat">94 active &middot; 73%</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Total Views <span class="sub">(All time)</span></div>
@@ -204,29 +215,74 @@
         <div class="kpi-delta up">&#9650; 3.4% this month</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Avg. Views per Dashboard</div>
-        <div class="kpi-value num">1,425</div>
-        <div class="kpi-delta flat">Across 128 dashboards</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Avg. Rating</div>
-        <div class="kpi-value num">4.3<span style="font-size:15px;color:var(--muted)">/5</span></div>
-        <div class="kpi-delta up">&#9650; 0.2 vs last quarter</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Total Favorites</div>
         <div class="kpi-value num">3,210</div>
-        <div class="kpi-delta flat">25 avg per dashboard</div>
+        <div class="kpi-delta up">&#9650; 6% this month</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">New This Month</div>
-        <div class="kpi-value num">6</div>
-        <div class="kpi-delta flat">4 published, 2 in draft</div>
+        <div class="kpi-label">Most Used Dashboard</div>
+        <div class="kpi-value kpi-value-text">District Health Coverage</div>
+        <div class="kpi-delta flat">5,186 views this month</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Draft / Pending Review</div>
-        <div class="kpi-value num">14</div>
-        <div class="kpi-delta down">&#9660; 3 vs last month</div>
+        <div class="kpi-label">Most Active User</div>
+        <div class="kpi-value kpi-value-text">Nasrin Begum</div>
+        <div class="kpi-delta flat">142 page hits this month</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--teal)">
+        <div class="kpi-label">Peak Traffic Hour</div>
+        <div class="kpi-value kpi-value-text">4:00 PM</div>
+        <div class="kpi-delta flat">Busiest hour, avg 268 hits</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ===================== INSIGHTS ===================== -->
+  <div class="section-heading"><h2>Insights</h2></div>
+  <p class="section-desc">What the numbers above are actually telling you.</p>
+
+  <div class="insight-groups">
+    <!-- System Usage insights -->
+    <div class="kpi-group" style="--group-accent:var(--primary)">
+      <div class="kpi-group-heading">
+        <span class="kpi-group-dot"></span>
+        <span class="kpi-group-title">System Usage</span>
+      </div>
+      <div class="card">
+        <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+        <ul class="insight-list">
+          <li><span class="insight-icon good">&#10003;</span>Active users grew 5.8% today.</li>
+          <li><span class="insight-icon good">&#10003;</span>Total hits grew 7.2% today.</li>
+          <li><span class="insight-icon good">&#10003;</span>Registered users grew 4.1% this month.</li>
+          <li><span class="insight-icon good">&#10003;</span>Users of the Health Analytics and MF Analytics projects are the most active.</li>
+        </ul>
+        <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+        <ul class="insight-list">
+          <li><span class="insight-icon watch">!</span>Traffic peaks at 4 PM &mdash; a good window to avoid for maintenance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Dashboard Performance insights -->
+    <div class="kpi-group" style="--group-accent:var(--teal)">
+      <div class="kpi-group-heading">
+        <span class="kpi-group-dot"></span>
+        <span class="kpi-group-title">Dashboard Performance</span>
+      </div>
+      <div class="card">
+        <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+        <ul class="insight-list">
+          <li><span class="insight-icon good">&#10003;</span>Total views grew 3.4% this month.</li>
+          <li><span class="insight-icon good">&#10003;</span>3,210 dashboard favorites saved across the platform.</li>
+        </ul>
+        <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+        <ul class="insight-list">
+          <li><span class="insight-icon watch">!</span>13 dashboards (10%) generate 47% of all views.</li>
+          <li><span class="insight-icon watch">!</span>2% of dashboards have zero favorites.</li>
+          <li><span class="insight-icon watch">!</span>27% of dashboards had fewer than 10 views this month.</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -308,60 +364,12 @@
       </select>
     </div>
     <table>
-      <thead><tr><th>Page</th><th>Hits</th><th>Unique Users</th></tr></thead>
+      <thead><tr><th>User ID</th><th>Full Name</th><th>Project(s)</th><th>Page Name</th><th>Hit Count</th><th>Date &amp; Time</th></tr></thead>
       <tbody id="pageHitTableBody"></tbody>
     </table>
   </div>
 
   <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">User wise Page Hit Count
-      <select class="range-select" data-table="userPageHit">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="all" selected>All Time</option>
-      </select>
-    </div>
-    <table>
-      <thead><tr><th>Username</th><th>Full Name</th><th>Page Name</th><th>Hit Count</th><th>Date &amp; Time</th></tr></thead>
-      <tbody id="userPageHitTableBody"></tbody>
-    </table>
-  </div>
-
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">Most Favorited Dashboards
-      <select class="range-select" data-table="favorited">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="all" selected>All Time</option>
-      </select>
-    </div>
-    <table>
-      <thead><tr><th>Dashboard</th><th>Owner team</th><th>Favorites</th></tr></thead>
-      <tbody id="favoritedTableBody"></tbody>
-    </table>
-  </div>
-
-  <div class="card" style="margin-bottom:16px;">
-    <div class="card-title">Recent Dashboard Activity
-      <select class="range-select" data-table="activity">
-        <option value="today">Today</option>
-        <option value="week">This Week</option>
-        <option value="month">This Month</option>
-        <option value="year">This Year</option>
-        <option value="all" selected>All Time</option>
-      </select>
-    </div>
-    <table>
-      <thead><tr><th>Full Name</th><th>Username</th><th>Action</th><th>Dashboard</th><th>When</th></tr></thead>
-      <tbody id="activityTableBody"></tbody>
-    </table>
-  </div>
-
-  <div class="card">
     <div class="card-title">User wise Dashboard View Count
       <select class="range-select" data-table="dashboardView">
         <option value="today">Today</option>
@@ -372,8 +380,24 @@
       </select>
     </div>
     <table>
-      <thead><tr><th>Username</th><th>Full Name</th><th>Dashboard Name</th><th>View Count</th><th>Last Viewed</th></tr></thead>
+      <thead><tr><th>User ID</th><th>Full Name</th><th>Project(s)</th><th>Dashboard Name</th><th>View Count</th><th>Last Viewed</th></tr></thead>
       <tbody id="dashboardViewTableBody"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Most Favorited Dashboards
+      <select class="range-select" data-table="favorited">
+        <option value="today">Today</option>
+        <option value="week">This Week</option>
+        <option value="month">This Month</option>
+        <option value="year">This Year</option>
+        <option value="all" selected>All Time</option>
+      </select>
+    </div>
+    <table>
+      <thead><tr><th>Dashboard</th><th>Dashboard Program</th><th>Favorites</th></tr></thead>
+      <tbody id="favoritedTableBody"></tbody>
     </table>
   </div>
 
@@ -397,6 +421,7 @@
 //# sourceMappingURL=chart.umd.js.map
 
 </script>
+
 <script>
 /* ============================================================
    DATA + TABLE RENDERING
@@ -415,53 +440,82 @@ function scaled(baseArr, range){
   return baseArr.map(v => Math.round(v * RANGE_SCALE[range]));
 }
 
-// ---- Users per Page Hit Count table: same pages, hits + unique users scale with range ----
-const pageLabelsFull = ['Dashboards Home','Data Catalog','District Health Coverage','MF Repayment Trends','Field Officer Productivity','Login Page','Admin Panel'];
-const pageHitsBaseWeek   = [3400,1450,2100,1120,980,1380,210];
-const pageUsersBaseWeek  = [812, 390, 540, 305, 268, 1244, 34];
-
-function renderPageHitTable(range){
-  const hits = scaled(pageHitsBaseWeek, range);
-  const users = scaled(pageUsersBaseWeek, range);
-  const rows = pageLabelsFull.map((name,i) => `
-    <tr><td class="name-cell">${name}</td><td class="num">${fmt(hits[i])}</td><td class="num">${fmt(users[i])}</td></tr>
-  `).join('');
-  document.getElementById('pageHitTableBody').innerHTML = rows;
-}
-
 // day-window each range covers, for log-style tables filtered by "how long ago"
 const RANGE_DAYS = {today:0, week:7, month:30, year:365, all:Infinity};
 
-// ---- User wise Page Hit Count: a log of hit events, filtered by how recent they are ----
+// Shared user directory (id -> list of projects). A user can belong to more than
+// one project at a time, so each entry is an array rather than a single value.
+// Usernames are intentionally not shown in the UI — user ID + project(s) only.
+const USER_PROJECTS = {
+  1: ['Health Analytics', 'Nutrition Survey Q3'],           // Nasrin Begum
+  2: ['MF Analytics'],                                       // Rahim Hossain
+  3: ['Health Analytics', 'Vaccination Coverage Tracker'],   // Sultana Akter
+  4: ['MF Analytics', 'Client Profitability Overview'],      // Jamal Islam
+  5: ['Ops'],                                                 // Tariq Anwar
+  6: ['IT', 'Field Officer Productivity'],                    // Mahmudur Rahman
+  7: ['Health Analytics']                                     // Shirin Chowdhury
+};
+
+function renderProjectTags(userId){
+  const projects = USER_PROJECTS[userId] || [];
+  if (!projects.length) return '';
+  return projects.map(p => `<span class="project-tag">${p}</span>`).join('');
+}
+
+// ---- Users per Page Hit Count: a log of hit events, filtered by how recent they are ----
 const userPageHitLog = [
-  {username:'n.begum', fullName:'Nasrin Begum', page:'Dashboards Home', hits:18, when:'Today, 09:12', daysAgo:0},
-  {username:'r.hossain', fullName:'Rahim Hossain', page:'District Health Coverage', hits:12, when:'Today, 08:47', daysAgo:0},
-  {username:'s.akter', fullName:'Sultana Akter', page:'Data Catalog', hits:9, when:'Yesterday, 16:20', daysAgo:1},
-  {username:'j.islam', fullName:'Jamal Islam', page:'MF Repayment Trends', hits:7, when:'Yesterday, 11:05', daysAgo:1},
-  {username:'t.anwar', fullName:'Tariq Anwar', page:'Login Page', hits:24, when:'2 days ago, 07:58', daysAgo:2},
-  {username:'m.rahman', fullName:'Mahmudur Rahman', page:'Field Officer Productivity', hits:5, when:'2 days ago, 15:40', daysAgo:2},
-  {username:'n.begum', fullName:'Nasrin Begum', page:'Admin Panel', hits:3, when:'3 days ago, 10:22', daysAgo:3},
-  {username:'s.chowdhury', fullName:'Shirin Chowdhury', page:'Dashboards Home', hits:14, when:'3 days ago, 09:03', daysAgo:3},
-  {username:'r.hossain', fullName:'Rahim Hossain', page:'Data Catalog', hits:6, when:'12 days ago', daysAgo:12},
-  {username:'s.akter', fullName:'Sultana Akter', page:'District Health Coverage', hits:11, when:'3 weeks ago', daysAgo:21},
-  {username:'j.islam', fullName:'Jamal Islam', page:'Login Page', hits:15, when:'2 months ago', daysAgo:60},
-  {username:'t.anwar', fullName:'Tariq Anwar', page:'MF Repayment Trends', hits:8, when:'5 months ago', daysAgo:150},
-  {username:'m.rahman', fullName:'Mahmudur Rahman', page:'Admin Panel', hits:4, when:'8 months ago', daysAgo:240},
-  {username:'n.begum', fullName:'Nasrin Begum', page:'Field Officer Productivity', hits:9, when:'Last year', daysAgo:400}
+  {userId:1, fullName:'Nasrin Begum', page:'Dashboards Home', hits:18, when:'Today, 09:12', daysAgo:0},
+  {userId:2, fullName:'Rahim Hossain', page:'District Health Coverage', hits:12, when:'Today, 08:47', daysAgo:0},
+  {userId:3, fullName:'Sultana Akter', page:'Data Catalog', hits:9, when:'Yesterday, 16:20', daysAgo:1},
+  {userId:4, fullName:'Jamal Islam', page:'MF Repayment Trends', hits:7, when:'Yesterday, 11:05', daysAgo:1},
+  {userId:5, fullName:'Tariq Anwar', page:'Login Page', hits:24, when:'2 days ago, 07:58', daysAgo:2},
+  {userId:6, fullName:'Mahmudur Rahman', page:'Field Officer Productivity', hits:5, when:'2 days ago, 15:40', daysAgo:2},
+  {userId:1, fullName:'Nasrin Begum', page:'Admin Panel', hits:3, when:'3 days ago, 10:22', daysAgo:3},
+  {userId:7, fullName:'Shirin Chowdhury', page:'Dashboards Home', hits:14, when:'3 days ago, 09:03', daysAgo:3},
+  {userId:2, fullName:'Rahim Hossain', page:'Data Catalog', hits:6, when:'12 days ago', daysAgo:12},
+  {userId:3, fullName:'Sultana Akter', page:'District Health Coverage', hits:11, when:'3 weeks ago', daysAgo:21},
+  {userId:4, fullName:'Jamal Islam', page:'Login Page', hits:15, when:'2 months ago', daysAgo:60},
+  {userId:5, fullName:'Tariq Anwar', page:'MF Repayment Trends', hits:8, when:'5 months ago', daysAgo:150},
+  {userId:6, fullName:'Mahmudur Rahman', page:'Admin Panel', hits:4, when:'8 months ago', daysAgo:240},
+  {userId:1, fullName:'Nasrin Begum', page:'Field Officer Productivity', hits:9, when:'Last year', daysAgo:400}
 ];
 
-function renderUserPageHitTable(range){
+function renderPageHitTable(range){
   const maxDays = RANGE_DAYS[range];
   const rows = userPageHitLog
     .filter(e => e.daysAgo <= maxDays)
-    .map(e => `<tr><td class="username">${e.username}</td><td class="name-cell">${e.fullName}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td><td class="sub">${e.when}</td></tr>`)
+    .map(e => `<tr><td class="num">${e.userId}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProjectTags(e.userId)}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td><td class="sub">${e.when}</td></tr>`)
     .join('');
-  document.getElementById('userPageHitTableBody').innerHTML = rows || `<tr><td colspan="5" class="sub">No hits recorded in this range.</td></tr>`;
+  document.getElementById('pageHitTableBody').innerHTML = rows || `<tr><td colspan="6" class="sub">No hits recorded in this range.</td></tr>`;
+}
+
+// ---- User wise Dashboard View Count: a log of view sessions, filtered by how recent they are ----
+const dashboardViewLog = [
+  {userId:1, fullName:'Nasrin Begum', dashboard:'District Health Coverage', views:86, when:'Today, 09:40', daysAgo:0},
+  {userId:2, fullName:'Rahim Hossain', dashboard:'Field Officer Productivity', views:64, when:'Today, 08:15', daysAgo:0},
+  {userId:3, fullName:'Sultana Akter', dashboard:'Microfinance Repayment Trends', views:52, when:'Yesterday, 17:02', daysAgo:1},
+  {userId:4, fullName:'Jamal Islam', dashboard:'Client Profitability Overview', views:41, when:'Yesterday, 13:30', daysAgo:1},
+  {userId:5, fullName:'Tariq Anwar', dashboard:'Nutrition Survey Q3', views:37, when:'2 days ago, 10:12', daysAgo:2},
+  {userId:6, fullName:'Mahmudur Rahman', dashboard:'Vaccination Coverage Tracker', views:29, when:'2 days ago, 09:05', daysAgo:2},
+  {userId:7, fullName:'Shirin Chowdhury', dashboard:'District Health Coverage', views:23, when:'3 days ago, 14:48', daysAgo:3},
+  {userId:1, fullName:'Nasrin Begum', dashboard:'Field Officer Productivity', views:18, when:'2 weeks ago', daysAgo:15},
+  {userId:2, fullName:'Rahim Hossain', dashboard:'Client Profitability Overview', views:12, when:'6 weeks ago', daysAgo:45},
+  {userId:3, fullName:'Sultana Akter', dashboard:'District Health Coverage', views:9, when:'6 months ago', daysAgo:180},
+  {userId:4, fullName:'Jamal Islam', dashboard:'Nutrition Survey Q3', views:6, when:'Last year', daysAgo:500}
+];
+
+function renderDashboardViewTable(range){
+  const maxDays = RANGE_DAYS[range];
+  const rows = dashboardViewLog
+    .filter(e => e.daysAgo <= maxDays)
+    .map(e => `<tr><td class="num">${e.userId}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProjectTags(e.userId)}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td><td class="sub">${e.when}</td></tr>`)
+    .join('');
+  document.getElementById('dashboardViewTableBody').innerHTML = rows || `<tr><td colspan="6" class="sub">No views recorded in this range.</td></tr>`;
 }
 
 // ---- Most Favorited Dashboards: totals are all-time; shorter ranges show favorites gained in that window ----
 const favoritedNames = ['District Health Coverage','Microfinance Repayment Trends','Field Officer Productivity','Client Profitability Overview','Nutrition Survey Q3','Vaccination Coverage Tracker'];
-const favoritedTeams = ['Health Analytics','MF Analytics','Ops','MF Analytics','Health Analytics','Health Analytics'];
+const favoritedProjects = ['Health Analytics','MF Analytics','Ops','MF Analytics','Health Analytics','Health Analytics'];
 const favoritedBaseAll = [341,298,247,210,168,142];
 
 function scaleFromAll(baseAllArr, range){
@@ -471,78 +525,20 @@ function scaleFromAll(baseAllArr, range){
 
 function renderFavoritedTable(range){
   const vals = scaleFromAll(favoritedBaseAll, range);
-  const rows = favoritedNames.map((name,i) => `<tr><td class="name-cell">${name}</td><td class="sub">${favoritedTeams[i]}</td><td class="num">${fmt(vals[i])}</td></tr>`).join('');
+  const rows = favoritedNames.map((name,i) => `<tr><td class="name-cell">${name}</td><td class="sub"><span class="project-tag">${favoritedProjects[i]}</span></td><td class="num">${fmt(vals[i])}</td></tr>`).join('');
   document.getElementById('favoritedTableBody').innerHTML = rows;
-}
-
-// ---- Recent Dashboard Activity: a log of events, filtered by how recent they are ----
-const activityLog = [
-  {name:'Nasrin Begum', initials:'NB', color:'var(--primary)', username:'n.begum', action:'Published', badge:'published', dashboard:'Nutrition Survey Q3', when:'12 min ago', daysAgo:0},
-  {name:'Rahim Hossain', initials:'RH', color:'var(--teal)', username:'r.hossain', action:'Edited', badge:'edited', dashboard:'Field Officer Productivity', when:'40 min ago', daysAgo:0},
-  {name:'Sultana Akter', initials:'SA', color:'var(--violet)', username:'s.akter', action:'Shared externally', badge:'shared', dashboard:'District Health Coverage', when:'1 hr ago', daysAgo:0},
-  {name:'Jamal Islam', initials:'JI', color:'var(--coral)', username:'j.islam', action:'Archived', badge:'archived', dashboard:'Legacy Donor Report 2023', when:'3 hr ago', daysAgo:0},
-  {name:'Tariq Anwar', initials:'TA', color:'var(--amber)', username:'t.anwar', action:'Cloned', badge:'cloned', dashboard:'Client Profitability Overview', when:'5 hr ago', daysAgo:0},
-  {name:'Mahmudur Rahman', initials:'MR', color:'var(--primary)', username:'m.rahman', action:'Edited', badge:'edited', dashboard:'Vaccination Coverage Tracker', when:'Yesterday', daysAgo:1},
-  {name:'Shirin Chowdhury', initials:'SC', color:'var(--teal)', username:'s.chowdhury', action:'Published', badge:'published', dashboard:'District Health Coverage', when:'2 weeks ago', daysAgo:14},
-  {name:'Nasrin Begum', initials:'NB', color:'var(--primary)', username:'n.begum', action:'Edited', badge:'edited', dashboard:'Field Officer Productivity', when:'3 months ago', daysAgo:90},
-  {name:'Rahim Hossain', initials:'RH', color:'var(--teal)', username:'r.hossain', action:'Archived', badge:'archived', dashboard:'Old Client Report 2024', when:'10 months ago', daysAgo:300},
-  {name:'Sultana Akter', initials:'SA', color:'var(--violet)', username:'s.akter', action:'Published', badge:'published', dashboard:'District Health Coverage', when:'2 years ago', daysAgo:650}
-];
-
-function renderActivityTable(range){
-  const maxDays = RANGE_DAYS[range];
-  const rows = activityLog
-    .filter(e => e.daysAgo <= maxDays)
-    .map(e => `
-      <tr>
-        <td><div class="person-row"><div class="avatar" style="background:${e.color}">${e.initials}</div><div class="person-meta"><div class="full-name">${e.name}</div></div></div></td>
-        <td class="username">${e.username}</td>
-        <td><span class="badge ${e.badge}">${e.action}</span></td>
-        <td class="sub">${e.dashboard}</td>
-        <td class="sub">${e.when}</td>
-      </tr>`)
-    .join('');
-  document.getElementById('activityTableBody').innerHTML = rows || `<tr><td colspan="5" class="sub">No activity recorded in this range.</td></tr>`;
-}
-
-// ---- User wise Dashboard View Count: a log of view sessions, filtered by how recent they are ----
-const dashboardViewLog = [
-  {username:'n.begum', fullName:'Nasrin Begum', dashboard:'District Health Coverage', views:86, when:'Today, 09:40', daysAgo:0},
-  {username:'r.hossain', fullName:'Rahim Hossain', dashboard:'Field Officer Productivity', views:64, when:'Today, 08:15', daysAgo:0},
-  {username:'s.akter', fullName:'Sultana Akter', dashboard:'Microfinance Repayment Trends', views:52, when:'Yesterday, 17:02', daysAgo:1},
-  {username:'j.islam', fullName:'Jamal Islam', dashboard:'Client Profitability Overview', views:41, when:'Yesterday, 13:30', daysAgo:1},
-  {username:'t.anwar', fullName:'Tariq Anwar', dashboard:'Nutrition Survey Q3', views:37, when:'2 days ago, 10:12', daysAgo:2},
-  {username:'m.rahman', fullName:'Mahmudur Rahman', dashboard:'Vaccination Coverage Tracker', views:29, when:'2 days ago, 09:05', daysAgo:2},
-  {username:'s.chowdhury', fullName:'Shirin Chowdhury', dashboard:'District Health Coverage', views:23, when:'3 days ago, 14:48', daysAgo:3},
-  {username:'n.begum', fullName:'Nasrin Begum', dashboard:'Field Officer Productivity', views:18, when:'2 weeks ago', daysAgo:15},
-  {username:'r.hossain', fullName:'Rahim Hossain', dashboard:'Client Profitability Overview', views:12, when:'6 weeks ago', daysAgo:45},
-  {username:'s.akter', fullName:'Sultana Akter', dashboard:'District Health Coverage', views:9, when:'6 months ago', daysAgo:180},
-  {username:'j.islam', fullName:'Jamal Islam', dashboard:'Nutrition Survey Q3', views:6, when:'Last year', daysAgo:500}
-];
-
-function renderDashboardViewTable(range){
-  const maxDays = RANGE_DAYS[range];
-  const rows = dashboardViewLog
-    .filter(e => e.daysAgo <= maxDays)
-    .map(e => `<tr><td class="username">${e.username}</td><td class="name-cell">${e.fullName}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td><td class="sub">${e.when}</td></tr>`)
-    .join('');
-  document.getElementById('dashboardViewTableBody').innerHTML = rows || `<tr><td colspan="5" class="sub">No views recorded in this range.</td></tr>`;
 }
 
 const TABLE_RANGE_HANDLERS = {
   pageHit: renderPageHitTable,
-  userPageHit: renderUserPageHitTable,
-  favorited: renderFavoritedTable,
-  activity: renderActivityTable,
-  dashboardView: renderDashboardViewTable
+  dashboardView: renderDashboardViewTable,
+  favorited: renderFavoritedTable
 };
 
 // Render every table right away — independent of whether Chart.js loaded.
 renderPageHitTable('all');
-renderUserPageHitTable('all');
-renderFavoritedTable('all');
-renderActivityTable('all');
 renderDashboardViewTable('all');
+renderFavoritedTable('all');
 
 document.querySelectorAll('[data-table]').forEach(sel => {
   sel.addEventListener('change', () => {
@@ -571,10 +567,7 @@ function showChartFallback(canvasId, message){
 }
 
 if (typeof Chart === 'undefined') {
-  // Chart.js is bundled inline above, so this branch should never run —
-  // it's kept only as a defensive fallback in case the embedded library
-  // is somehow stripped out or corrupted.
-  console.error('Chart.js is missing from this page. The bundled library may have been removed or corrupted.');
+  console.error('Chart.js failed to load from the CDN.');
   ['chHits','chMostVisited','chMostViewed','chRatings'].forEach(id =>
     showChartFallback(id, 'Chart library failed to load — check your internet connection.')
   );
