@@ -128,7 +128,7 @@
   .badge.shared{background:#F5F0FF;color:#7A6BD6;}
   .badge.archived{background:#FCEAEA;color:#D24949;}
   .badge.cloned{background:#FFF3E0;color:#C7841E;}
-  .project-tag{font-size:10.2px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;white-space:nowrap;background:#f7dde5;color:#FC0083;margin:1px 3px 1px 0;}
+  .project-tag{font-size:10.2px;font-weight:600;padding:2px 7px;border-radius:5px;display:inline-block;white-space:nowrap;background:#f7dde5;color:#f36fb3;margin:1px 3px 1px 0;}
   .person-row{display:flex;align-items:center;gap:9px;}
   .avatar{width:26px;height:26px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10.2px;font-weight:700;color:#fff;}
   .person-meta .full-name{font-weight:600;font-size:12.6px;line-height:1.3;}
@@ -300,7 +300,7 @@
       <div class="chart-wrap"><canvas id="chHits"></canvas></div>
     </div>
     <div class="card">
-      <div class="card-title">Most Visited Page
+      <div class="card-title">Most Visited Page (Top 10)
         <select class="range-select" data-chart="mostVisited">
           <option value="today">Today</option>
           <option value="week">This Week</option>
@@ -315,7 +315,7 @@
 
   <div class="grid g-2" style="margin-bottom:16px;">
     <div class="card">
-      <div class="card-title">Most Viewed Dashboards
+      <div class="card-title">Most Viewed Dashboards (Top 10)
         <select class="range-select" data-chart="mostViewed">
           <option value="today">Today</option>
           <option value="week">This Week</option>
@@ -582,12 +582,12 @@ if (typeof Chart === 'undefined') {
     };
 
     // ---- Most Visited Page: same pages, magnitude scales with range ----
-    const pageLabelsShort = ['Dashboards Home','District Health','Data Catalog','MF Repayment','Field Officer','Login Page'];
-    const pageBaseWeek = [3400,2100,1450,1120,980,1380];
+    const pageLabelsShort = ['Dashboards Home','District Health','Data Catalog','MF Repayment','Field Officer','Login Page','Health Analytics','MF Analytics','Reports','User Management'];
+    const pageBaseWeek = [3400,2100,1450,1120,980,1380,1250,1180,920,760];
 
     // ---- Most Viewed Dashboards: same dashboards, magnitude scales with range ----
-    const dashLabelsShort = [['District Health','Coverage'],['MF Repayment','Trends'],['Field Officer','Productivity'],['Client','Profitability'],['Nutrition','Survey Q3'],['Vaccination','Tracker']];
-    const dashBaseWeek = [1206,1028,890,760,628,548];
+    const dashLabelsShort = [['District Health','Coverage'],['MF Repayment','Trends'],['Field Officer','Productivity'],['Client','Profitability'],['Nutrition','Survey Q3'],['Vaccination','Tracker'],['Health Analytics','Overview'],['MF Analytics','Profitability'],['Maternal Health','Insights'],['Child Health','Monitoring']];
+    const dashBaseWeek = [1206,1028,890,760,628,548,512,476,438,395];
 
     // ---- Ratings distribution: same star buckets, counts scale with range ----
     const ratingsBaseWeek = [12,8,3,1,1];
