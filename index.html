@@ -239,7 +239,6 @@
         </div>
       </div>
     </div>
-    <p class="filter-hint">Leave the dates empty to include every record on the platform.</p>
 
     <div class="filter-field">
       <label for="fltProgram">Program</label>
@@ -345,7 +344,7 @@
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Peak Traffic Hour</div>
-        <div class="kpi-value kpi-value-text">4:00 PM</div>
+        <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
         <div class="kpi-delta flat">Busiest hour, avg 268 hits</div>
       </div>
     </div>
@@ -374,7 +373,7 @@
         </ul>
         <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
         <ul class="insight-list">
-          <li><span class="insight-icon watch">!</span>Traffic peaks at 4 PM &mdash; a good window to avoid for maintenance.</li>
+          <li><span class="insight-icon watch">!</span>Traffic peaks at 4 PM to 5PM &mdash; a good window to avoid for maintenance.</li>
         </ul>
       </div>
     </div>
@@ -438,7 +437,7 @@
   <div class="card" style="margin-bottom:16px;">
     <div class="card-title">Users per Page Hit Count</div>
     <table>
-      <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th><th>Date</th></tr></thead>
+      <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th></tr></thead>
       <tbody id="pageHitTableBody"></tbody>
     </table>
   </div>
@@ -446,7 +445,7 @@
   <div class="card" style="margin-bottom:16px;">
     <div class="card-title">User wise Dashboard View Count</span></div>
     <table>
-      <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th><th>Date</th></tr></thead>
+      <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th></tr></thead>
       <tbody id="dashboardViewTableBody"></tbody>
     </table>
   </div>
@@ -555,10 +554,10 @@ const userPageHitLog = [
 function renderPageHitTable(){
   const rows = userPageHitLog
     .filter(e => inDateRange(e.date) && pageMatch(e.page) && programMatch(USER_PROGRAMS[e.userPin] || []))
-    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td><td class="sub">${fmtDate(e.date)}</td></tr>`)
+    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td></tr>`)
     .join('');
   document.getElementById('pageHitTableBody').innerHTML = rows ||
-    `<tr><td colspan="6" class="sub">No hits recorded for the selected filters.</td></tr>`;
+    `<tr><td colspan="5" class="sub">No hits recorded for the selected filters.</td></tr>`;
 }
 
 // ---- User wise Dashboard View Count ----
@@ -579,10 +578,10 @@ const dashboardViewLog = [
 function renderDashboardViewTable(){
   const rows = dashboardViewLog
     .filter(e => inDateRange(e.date) && programMatch(USER_PROGRAMS[e.userPin] || []))
-    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td><td class="sub">${fmtDate(e.date)}</td></tr>`)
+    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td></tr>`)
     .join('');
   document.getElementById('dashboardViewTableBody').innerHTML = rows ||
-    `<tr><td colspan="6" class="sub">No views recorded for the selected filters.</td></tr>`;
+    `<tr><td colspan="5" class="sub">No views recorded for the selected filters.</td></tr>`;
 }
 
 // ---- Most Favorited Dashboards: totals are all-time; shorter ranges show favorites gained in that window ----
