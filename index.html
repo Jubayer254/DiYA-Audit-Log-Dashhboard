@@ -290,70 +290,70 @@
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Avg. Daily Active Users</div>
+        <div class="kpi-label">Avg. Active Users</div>
         <div class="kpi-value num" id="kpiAvgDAU">268</div>
-        <div class="kpi-delta flat">Avg per day, selected range</div>
+        <div class="kpi-delta flat">Avg per day</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Total Hits <span class="sub" id="kpiHitsScope">(All time)</span></div>
+        <div class="kpi-label">Total Hits</div>
         <div class="kpi-value num" id="kpiTotalHits">5,842</div>
-        <div class="kpi-delta flat">For selected filters</div>
+        <div class="kpi-delta flat">Combined site-wide traffic</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Avg. Hits Per Day</div>
+        <div class="kpi-label">Avg. Hits</div>
         <div class="kpi-value num">4,960</div>
         <div class="kpi-delta flat">Baseline daily rate</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Registered Users <span class="sub" id="kpiRegisteredScope">(All time)</span></div>
+        <div class="kpi-label">Total Registered Users</div>
         <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
-        <div class="kpi-delta flat">For selected filters</div>
+        <div class="kpi-delta flat">All user accounts</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
         <div class="kpi-label">Peak Traffic Hour</div>
         <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
-        <div class="kpi-delta flat">Busiest hour, typical day</div>
+        <div class="kpi-delta flat">Busiest hour</div>
       </div>
     </div>
+  </div><div class="kpi-group" style="--group-accent:var(--teal)">
+  <div class="kpi-group-heading">
+    <span class="kpi-group-dot"></span>
+    <span class="kpi-group-title">Dashboard Performance</span>
+    <span class="kpi-group-count">&middot; Reflects the filters</span>
   </div>
+  <div class="grid g-cards">
+    <div class="card kpi" style="--accent:var(--teal)">
+      <div class="kpi-label">Dashboards</div>
+      <div class="kpi-value num" id="kpiDashboardsCount">128</div>
+      <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
+    </div>
+    <div class="card kpi" style="--accent:var(--teal)">
+      <div class="kpi-label">Total Dashboard Views</div>
+      <div class="kpi-value num" id="kpiTotalViews">182,400</div>
+      <div class="kpi-delta flat">Combined across all dashboards</div>
+    </div>
+    <div class="card kpi" style="--accent:var(--teal)">
+      <div class="kpi-label">Total Favorites</div>
+      <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
+      <div class="kpi-delta flat">Saved by users</div>
+    </div>
+    <div class="card kpi" style="--accent:var(--teal)">
+      <div class="kpi-label">Most Used Dashboard</div>
+      <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
+      <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views</div>
+    </div>
+    <div class="card kpi" style="--accent:var(--teal)">
+      <div class="kpi-label">Most Active User</div>
+      <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
+      <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 page hits</div>
+    </div>
+  </div>
+</div>
 
   <div class="divider"></div>
 
   <!-- Dashboard Performance group — dashboard-level metrics, recomputed live from the date/program filters -->
-  <div class="kpi-group" style="--group-accent:var(--teal)">
-    <div class="kpi-group-heading">
-      <span class="kpi-group-dot"></span>
-      <span class="kpi-group-title">Dashboard Performance</span>
-      <span class="kpi-group-count">&middot; Reflects the filters</span>
-    </div>
-    <div class="grid g-cards">
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Dashboards</div>
-        <div class="kpi-value num" id="kpiDashboardsCount">128</div>
-        <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Views <span class="sub" id="kpiViewsScope">(All time)</span></div>
-        <div class="kpi-value num" id="kpiTotalViews">182,400</div>
-        <div class="kpi-delta flat">For selected filters</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Favorites</div>
-        <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
-        <div class="kpi-delta flat">For selected filters</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Most Used Dashboard</div>
-        <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
-        <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views in range</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Most Active User</div>
-        <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
-        <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 page hits in range</div>
-      </div>
-    </div>
-  </div>
+ 
 
   <div class="divider"></div>
 
@@ -662,21 +662,6 @@ function scopeLabel(){
   return `${from} — ${to}`;
 }
 
-function renderActiveFilters(){
-  const chips = [`<span class="chip">Date <b>${scopeLabel()}</b></span>`];
-  if (filterState.programs.length)
-    chips.push(`<span class="chip">Program <b>${filterState.programs.length === 1 ? filterState.programs[0] : filterState.programs.length + ' selected'}</b></span>`);
-  if (filterState.pages.length)
-    chips.push(`<span class="chip">Page <b>${filterState.pages.length === 1 ? filterState.pages[0] : filterState.pages.length + ' selected'}</b></span>`);
-  document.getElementById('activeFilters').innerHTML =
-    `<span class="af-label">Showing</span>` + chips.join('');
-
-  const dirty = !!(filterState.from || filterState.to || filterState.programs.length || filterState.pages.length);
-  filterTab.classList.toggle('has-filters', dirty);
-
-  document.querySelectorAll('[data-scope]').forEach(el => { el.textContent = scopeLabel(); });
-}
-
 function applyFilters(){
   filterState.from = parseInput(document.getElementById('fltDateFrom').value);
   filterState.to   = parseInput(document.getElementById('fltDateTo').value);
@@ -710,7 +695,6 @@ document.getElementById('fltReset').addEventListener('click', resetFilters);
 let refreshCharts = function(){};
 
 function refreshAll(){
-  renderActiveFilters();
   renderPageHitTable();
   renderDashboardViewTable();
   renderFavoritedTable();
