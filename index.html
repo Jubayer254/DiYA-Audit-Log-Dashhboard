@@ -211,6 +211,16 @@
   .select2-dropdown{border-color:var(--line);border-radius:8px;font-size:12.5px;}
   .select2-container--default .select2-results__option--highlighted[aria-selected]{background:var(--primary);}
   .select2-container{z-index:90;}
+
+  .snapshot-note{
+    display:flex;align-items:center;gap:6px;
+    margin:10px 0 2px;
+    color:var(--muted);font-size:11.5px;font-weight:500;
+  }
+  .snapshot-note .info-dot{
+    width:14px;height:14px;border-radius:50%;background:var(--line);color:var(--muted);
+    display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0;
+  }
 </style>
 </head>
 <body>
@@ -267,7 +277,7 @@
     <div class="refresh-pill"><span class="pulse"></span> Last Updated Sep 15, 2026, 7:39 AM</div>
   </div>
 
-  <div class="active-filters" id="activeFilters"></div>
+  <!-- <div class="active-filters" id="activeFilters"></div> -->
 
   <!-- ===================== KPI CARDS (grouped: System vs Dashboard) ===================== -->
 
@@ -280,72 +290,67 @@
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Active Users Today</div>
-        <div class="kpi-value num">312</div>
-        <div class="kpi-delta up">&#9650; 5.8% vs yesterday</div>
+        <div class="kpi-label">Avg. Daily Active Users</div>
+        <div class="kpi-value num" id="kpiAvgDAU">268</div>
+        <div class="kpi-delta flat">Avg per day, selected range</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Avg. Daily Active Users <span class="sub">(7d)</span></div>
-        <div class="kpi-value num">268</div>
-        <div class="kpi-delta flat">Weekday avg</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Total Registered Users</div>
-        <div class="kpi-value num">2,340</div>
-        <div class="kpi-delta up">&#9650; 4.1% this month</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Total Hits Today</div>
-        <div class="kpi-value num">5,842</div>
-        <div class="kpi-delta up">&#9650; 7.2% vs yesterday</div>
+        <div class="kpi-label">Total Hits <span class="sub" id="kpiHitsScope">(All time)</span></div>
+        <div class="kpi-value num" id="kpiTotalHits">5,842</div>
+        <div class="kpi-delta flat">For selected filters</div>
       </div>
       <div class="card kpi" style="--accent:var(--primary)">
         <div class="kpi-label">Avg. Hits Per Day</div>
         <div class="kpi-value num">4,960</div>
-        <div class="kpi-delta flat">Trailing 30 days</div>
+        <div class="kpi-delta flat">Baseline daily rate</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Registered Users <span class="sub" id="kpiRegisteredScope">(All time)</span></div>
+        <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
+        <div class="kpi-delta flat">For selected filters</div>
+      </div>
+      <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-label">Peak Traffic Hour</div>
+        <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
+        <div class="kpi-delta flat">Busiest hour, typical day</div>
       </div>
     </div>
   </div>
 
   <div class="divider"></div>
 
-  <!-- Dashboard Performance group — dashboard-level metrics -->
+  <!-- Dashboard Performance group — dashboard-level metrics, recomputed live from the date/program filters -->
   <div class="kpi-group" style="--group-accent:var(--teal)">
     <div class="kpi-group-heading">
       <span class="kpi-group-dot"></span>
       <span class="kpi-group-title">Dashboard Performance</span>
-      <span class="kpi-group-count">&middot; Dashboard-Level Metrics</span>
+      <span class="kpi-group-count">&middot; Reflects the filters</span>
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Dashboards</div>
-        <div class="kpi-value num">128</div>
-        <div class="kpi-delta flat">94 active &middot; 73%</div>
+        <div class="kpi-value num" id="kpiDashboardsCount">128</div>
+        <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Views <span class="sub">(All time)</span></div>
-        <div class="kpi-value num">182,400</div>
-        <div class="kpi-delta up">&#9650; 3.4% this month</div>
+        <div class="kpi-label">Total Views <span class="sub" id="kpiViewsScope">(All time)</span></div>
+        <div class="kpi-value num" id="kpiTotalViews">182,400</div>
+        <div class="kpi-delta flat">For selected filters</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Total Favorites</div>
-        <div class="kpi-value num">3,210</div>
-        <div class="kpi-delta up">&#9650; 6% this month</div>
+        <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
+        <div class="kpi-delta flat">For selected filters</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Most Used Dashboard</div>
-        <div class="kpi-value kpi-value-text">District Health Coverage</div>
-        <div class="kpi-delta flat">5,186 views this month</div>
+        <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
+        <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views in range</div>
       </div>
       <div class="card kpi" style="--accent:var(--teal)">
         <div class="kpi-label">Most Active User</div>
-        <div class="kpi-value kpi-value-text">Nasrin Begum</div>
-        <div class="kpi-delta flat">142 page hits this month</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Peak Traffic Hour</div>
-        <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
-        <div class="kpi-delta flat">Busiest hour, avg 268 hits</div>
+        <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
+        <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 page hits in range</div>
       </div>
     </div>
   </div>
@@ -354,7 +359,7 @@
 
   <!-- ===================== INSIGHTS ===================== -->
   <div class="section-heading"><h2>Insights</h2></div>
-  <p class="section-desc">What the numbers above are actually telling you.</p>
+  <p class="section-desc">What the numbers above are actually telling you, for the selected filters.</p>
 
   <div class="insight-groups">
     <!-- System Usage insights -->
@@ -365,15 +370,15 @@
       </div>
       <div class="card">
         <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-        <ul class="insight-list">
-          <li><span class="insight-icon good">&#10003;</span>Active users grew 5.8% today.</li>
-          <li><span class="insight-icon good">&#10003;</span>Total hits grew 7.2% today.</li>
-          <li><span class="insight-icon good">&#10003;</span>Registered users grew 4.1% this month.</li>
-          <li><span class="insight-icon good">&#10003;</span>Users of the Health Analytics and MF Analytics programs are the most active.</li>
+        <ul class="insight-list" id="sysGoodList">
+          <li><span class="insight-icon good">&#10003;</span>Dashboards Home is the most visited page overall, with 835,429 hits.</li>
+          <li><span class="insight-icon good">&#10003;</span>BHP and MF program users are the most active users.</li>
+          <li><span class="insight-icon good">&#10003;</span>75% of API requests succeed.</li>
         </ul>
         <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-        <ul class="insight-list">
-          <li><span class="insight-icon watch">!</span>Traffic peaks at 4 PM to 5 PM &mdash; a good window to avoid for maintenance.</li>
+        <ul class="insight-list" id="sysWatchList">
+          <li><span class="insight-icon watch">!</span>UPG program users generate the fewest hits overall &mdash; worth checking engagement there.</li>
+          <li><span class="insight-icon watch">!</span>One API endpoint takes up to 2.5 seconds to respond — worth checking for a bottleneck.</li>
         </ul>
       </div>
     </div>
@@ -386,15 +391,15 @@
       </div>
       <div class="card">
         <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-        <ul class="insight-list">
-          <li><span class="insight-icon good">&#10003;</span>Total views grew 3.4% this month.</li>
-          <li><span class="insight-icon good">&#10003;</span>3,210 dashboard favorites saved across the platform.</li>
+        <ul class="insight-list" id="dashGoodList">
+          <li><span class="insight-icon good">&#10003;</span>BRAC Program Coverage is most favorite dashboard.</li>
+          <li><span class="insight-icon good">&#10003;</span>48% of ratings given are 5 stars.</li>
+          <li><span class="insight-icon good">&#10003;</span>MF program has the highest number of dashboards.</li>
         </ul>
         <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-        <ul class="insight-list">
-          <li><span class="insight-icon watch">!</span>13 dashboards (10%) generate 47% of all views.</li>
-          <li><span class="insight-icon watch">!</span>2% of dashboards have zero favorites.</li>
-          <li><span class="insight-icon watch">!</span>27% of dashboards had fewer than 10 views this month.</li>
+        <ul class="insight-list" id="dashWatchList">
+          <li><span class="insight-icon watch">!</span>40% of dashboards have zero favorites.</li>
+          <li><span class="insight-icon watch">!</span>UPG program has the least number of dashboards.</li>
         </ul>
       </div>
     </div>
