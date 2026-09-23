@@ -7,6 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" rel="stylesheet">
 <style>
   :root{
     --navy:#12203F;
@@ -110,6 +111,13 @@
     text-align:left;color:var(--muted);font-weight:600;font-size:10.8px;text-transform:uppercase;
     letter-spacing:.3px;padding:0 10px 10px;border-bottom:1px solid var(--line);white-space:nowrap;
   }
+  thead tr.col-filters th{padding:8px 10px 10px;text-transform:none;letter-spacing:0;}
+  .col-filter{
+    width:100%;min-width:90px;font-family:'Inter',sans-serif;font-size:11.5px;font-weight:500;color:var(--text);
+    background:#F5F8FC;border:1px solid var(--line);border-radius:6px;padding:5px 6px;cursor:pointer;
+  }
+  .col-filter:focus{outline:none;border-color:var(--primary);background:#fff;}
+  .col-filter.active{border-color:var(--primary);background:#FDE7F2;color:var(--primary);font-weight:600;}
   tbody td{padding:10px;border-bottom:1px solid #EEF1F6;color:var(--text);vertical-align:middle;}
   tbody tr:last-child td{border-bottom:none;}
   .name-cell{font-weight:600;}
@@ -129,65 +137,46 @@
 
   footer{text-align:center;color:var(--muted);font-size:12px;padding:26px 0 10px;}
 
-  /* ===================== FILTER SIDEBAR ===================== */
-  .filter-tab{
-    position:fixed;top:50%;right:0;transform:translateY(-50%);
-    background:var(--card);border:1px solid var(--line);border-right:none;
-    border-radius:8px 0 0 8px;padding:18px 9px;cursor:pointer;z-index:60;
-    font-family:'Inter',sans-serif;font-size:12px;font-weight:600;color:var(--text);
-    writing-mode:vertical-rl;text-orientation:mixed;letter-spacing:.5px;
-    box-shadow:-2px 0 10px rgba(16,26,46,.07);
+  /* ===================== TOP FILTER BAR ===================== */
+  .topbar-side{display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+  .top-filters{display:flex;align-items:center;gap:8px;}
+  .top-filters .range-input-wrap{width:270px;}
+  .range-input{background-color:var(--card) !important;}
+  .btn-link{
+    font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--primary);
+    background:#FDE7F2;border:none;border-radius:7px;padding:9px 14px;cursor:pointer;white-space:nowrap;
   }
-  .filter-tab:hover{color:var(--primary);}
-  .filter-tab .dot{
-    display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--primary);
-    margin-bottom:6px;visibility:hidden;
+  .btn-link:hover{opacity:.9;}
+  @media (max-width:600px){
+    .topbar-side{align-items:stretch;width:100%;}
+    .top-filters .range-input-wrap{width:auto;flex:1;}
   }
-  .filter-tab.has-filters .dot{visibility:visible;}
+  .range-input-wrap{position:relative;}
+  .range-input{
+    width:100%;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text);cursor:pointer;
+    background:#F5F8FC url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236B7686' stroke-width='2' stroke-linecap='round'%3E%3Crect x='3' y='5' width='18' height='16' rx='2'/%3E%3Cpath d='M16 3v4M8 3v4M3 10h18'/%3E%3C/svg%3E") no-repeat 10px center;
+    border:1px solid var(--line);border-radius:7px;padding:9px 30px 9px 32px;
+  }
+  .range-input:focus{outline:none;border-color:var(--primary);background-color:#fff;}
+  .range-clear{
+    position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:none;
+    font-size:17px;line-height:1;color:var(--muted);cursor:pointer;padding:2px 5px;
+  }
+  .range-clear:hover{color:var(--primary);}
 
-  .filter-overlay{
-    position:fixed;inset:0;background:rgba(16,26,46,.35);opacity:0;visibility:hidden;
-    transition:opacity .25s ease;z-index:70;
-  }
-  .filter-overlay.open{opacity:1;visibility:visible;}
-
-  .filter-panel{
-    position:fixed;top:0;right:0;height:100%;width:430px;max-width:92vw;background:var(--card);
-    transform:translateX(100%);transition:transform .28s cubic-bezier(.4,0,.2,1);
-    z-index:80;display:flex;flex-direction:column;box-shadow:-8px 0 26px rgba(16,26,46,.14);
-  }
-  .filter-panel.open{transform:translateX(0);}
-  .filter-head{
-    display:flex;align-items:center;justify-content:space-between;
-    padding:20px 24px;border-bottom:1px solid var(--line);
-  }
-  .filter-head h3{margin:0;font-size:17px;font-weight:700;}
-  .filter-close{
-    background:none;border:none;font-size:22px;line-height:1;color:var(--muted);cursor:pointer;padding:0 2px;
-  }
-  .filter-close:hover{color:var(--text);}
-  .filter-body{padding:22px 24px;overflow-y:auto;flex:1;}
-  .filter-field{margin-bottom:20px;}
-  .filter-field > label{
-    display:block;font-size:12.5px;font-weight:700;margin-bottom:7px;color:var(--text);
-  }
-  .date-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-  .date-row .sublabel{font-size:10.5px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;display:block;margin-bottom:4px;}
-  input[type="date"]{
-    width:100%;font-family:'Inter',sans-serif;font-size:12.5px;color:var(--text);
-    background:#F5F8FC;border:1px solid var(--line);border-radius:7px;padding:8px 10px;
-  }
-  input[type="date"]:focus{outline:none;border-color:var(--primary);background:#fff;}
-  .filter-actions{display:flex;gap:10px;padding:18px 24px;border-top:1px solid var(--line);}
-  .btn{
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;border:none;border-radius:7px;
-    padding:9px 22px;cursor:pointer;
-  }
-  .btn-apply{background:var(--primary);color:#fff;}
-  .btn-reset{background:#FDE7F2;color:var(--primary);}
-  .btn:hover{opacity:.9;}
-  .filter-hint{font-size:11.5px;color:var(--muted);margin:-8px 0 20px;line-height:1.45;}
-
+  /* Date range picker skin */
+  .daterangepicker{z-index:100;font-family:'Inter',sans-serif;border-color:var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(16,26,46,.16);}
+  .daterangepicker .ranges li{font-size:12.5px;border-radius:6px;margin:2px 6px;}
+  .daterangepicker .ranges li.active{background:var(--primary);}
+  .daterangepicker .ranges li:hover:not(.active){background:#FDE7F2;color:var(--primary);}
+  .daterangepicker td.active,.daterangepicker td.active:hover{background:var(--primary);}
+  .daterangepicker td.in-range{background:#FDE7F2;color:var(--text);}
+  .daterangepicker td.start-date.end-date{border-radius:4px;}
+  .daterangepicker .drp-buttons .btn{font-size:12px;padding:6px 14px;}
+  .daterangepicker .drp-buttons .applyBtn{background:var(--primary);color:#fff;}
+  .daterangepicker .drp-buttons .cancelBtn{background:#FDE7F2;color:var(--primary);}
+  .daterangepicker .drp-selected{font-size:12px;color:var(--muted);}
+  .daterangepicker select.monthselect,.daterangepicker select.yearselect{font-family:'Inter',sans-serif;font-size:12px;}
   .active-filters{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin:0 0 22px;}
   .active-filters .af-label{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.3px;}
   .chip{
@@ -225,48 +214,6 @@
 </head>
 <body>
 
-<!-- ===================== COLLAPSIBLE FILTER SIDEBAR ===================== -->
-<button class="filter-tab" id="filterTab"><span class="dot"></span>Filters</button>
-<div class="filter-overlay" id="filterOverlay"></div>
-
-<aside class="filter-panel" id="filterPanel" aria-hidden="true">
-  <div class="filter-head">
-    <h3>Filters</h3>
-    <button class="filter-close" id="filterClose" aria-label="Close filters">&times;</button>
-  </div>
-
-  <div class="filter-body">
-    <div class="filter-field">
-      <label>Date Range</label>
-      <div class="date-row">
-        <div>
-          <span class="sublabel">From</span>
-          <input type="date" id="fltDateFrom">
-        </div>
-        <div>
-          <span class="sublabel">To</span>
-          <input type="date" id="fltDateTo">
-        </div>
-      </div>
-    </div>
-
-    <div class="filter-field">
-      <label for="fltProgram">Program</label>
-      <select id="fltProgram" multiple="multiple" data-placeholder="Select Program(s)"></select>
-    </div>
-
-    <div class="filter-field">
-      <label for="fltPage">Page Name</label>
-      <select id="fltPage" multiple="multiple" data-placeholder="Select Page(s)"></select>
-    </div>
-  </div>
-
-  <div class="filter-actions">
-    <button class="btn btn-apply" id="fltApply">Apply</button>
-    <button class="btn btn-reset" id="fltReset">Reset</button>
-  </div>
-</aside>
-
 <main class="main">
 
   <div class="topbar">
@@ -274,10 +221,17 @@
       <h1>DiYA Application Insights</h1>
       <p>Platform usage and dashboard performance, all in one view.</p>
     </div>
-    <div class="refresh-pill"><span class="pulse"></span> Last Updated Sep 15, 2026, 7:39 AM</div>
+    <div class="topbar-side">
+      <div class="refresh-pill"><span class="pulse"></span> Last Updated Sep 15, 2026, 7:39 AM</div>
+      <div class="top-filters">
+        <div class="range-input-wrap">
+          <input type="text" id="fltDateRange" class="range-input" placeholder="All time" readonly aria-label="Date range">
+          <button type="button" class="range-clear" id="fltDateClear" aria-label="Clear date range" hidden>&times;</button>
+        </div>
+        <button type="button" class="btn-link" id="fltReset">Reset filters</button>
+      </div>
+    </div>
   </div>
-
-  <!-- <div class="active-filters" id="activeFilters"></div> -->
 
   <!-- ===================== KPI CARDS (grouped: System vs Dashboard) ===================== -->
 
@@ -325,7 +279,7 @@
     </div>
     <div class="grid g-cards">
       <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Dashboards</div>
+        <div class="kpi-label">Total Dashboards</div>
         <div class="kpi-value num" id="kpiDashboardsCount">128</div>
         <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
       </div>
@@ -466,6 +420,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.30.1/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"></script>
 
 <script>
@@ -485,11 +441,6 @@ const EARLIEST = new Date(2022, 0, 1);         // start of recorded history
 function dateFromDaysAgo(d){ return new Date(TODAY.getTime() - d * MS_DAY); }
 function fmtDate(dt){
   return dt.toLocaleDateString('en-GB', {day:'2-digit', month:'short', year:'numeric'});
-}
-function parseInput(val){
-  if (!val) return null;
-  const [y,m,d] = val.split('-').map(Number);
-  return new Date(y, m - 1, d);
 }
 function daysBetween(a,b){ return Math.max(1, Math.round((b - a) / MS_DAY) + 1); }
 
@@ -554,13 +505,80 @@ const userPageHitLog = [
   {userPin:1000, fullName:'Nasrin Begum', page:'Field Officer Productivity', hits:9, daysAgo:400}
 ].map(e => Object.assign(e, {date: dateFromDaysAgo(e.daysAgo)}));
 
+/* ---------------- Per-column dropdown filters ----------------
+   Each table gets a second header row with one <select> per column.
+   A column's `values(row)` returns the value(s) that column holds for a row;
+   multi-valued columns (like Program(s)) match if any value equals the pick.
+   Options are built from rows that pass the sidebar filters, so every choice
+   always matches at least one row. */
+const colFilterState = {};   // tbodyId -> [selected value per column, '' = All]
+
+function ensureColFilterRow(tbodyId, columns, onChange){
+  const table = document.getElementById(tbodyId).closest('table');
+  if (table.querySelector('tr.col-filters')) return;
+  colFilterState[tbodyId] = columns.map(() => '');
+  const tr = document.createElement('tr');
+  tr.className = 'col-filters';
+  tr.innerHTML = columns.map((c,i) =>
+    `<th><select class="col-filter" data-col="${i}" aria-label="Filter ${c.label}"></select></th>`).join('');
+  table.querySelector('thead').appendChild(tr);
+  tr.addEventListener('change', e => {
+    const sel = e.target;
+    colFilterState[tbodyId][+sel.dataset.col] = sel.value;
+    onChange();
+  });
+}
+
+function populateColFilters(tbodyId, columns, rows){
+  const table = document.getElementById(tbodyId).closest('table');
+  table.querySelectorAll('select.col-filter').forEach(sel => {
+    const i = +sel.dataset.col;
+    const numeric = columns[i].numeric;
+    const uniq = [...new Set(rows.flatMap(r => columns[i].values(r).map(String)))]
+      .sort((a,b) => numeric ? a - b : a.localeCompare(b));
+    let current = colFilterState[tbodyId][i];
+    if (current && !uniq.includes(current)) current = colFilterState[tbodyId][i] = '';
+    sel.innerHTML = `<option value="">All</option>` +
+      uniq.map(v => `<option value="${v}">${numeric ? fmt(+v) : v}</option>`).join('');
+    sel.value = current;
+    sel.classList.toggle('active', !!current);
+  });
+}
+
+function applyColFilters(tbodyId, columns, rows){
+  const picks = colFilterState[tbodyId];
+  return rows.filter(r => columns.every((c,i) =>
+    !picks[i] || c.values(r).map(String).includes(picks[i])));
+}
+
+const lastTableConfig = {};  // tbodyId -> latest config, so dropdown changes use current rows
+
+function renderFilterableTable(config){
+  const {tbodyId, columns, rows, rowHtml, emptyMsg} = config;
+  lastTableConfig[tbodyId] = config;
+  ensureColFilterRow(tbodyId, columns, () => renderFilterableTable(lastTableConfig[tbodyId]));
+  populateColFilters(tbodyId, columns, rows);
+  const html = applyColFilters(tbodyId, columns, rows).map(rowHtml).join('');
+  document.getElementById(tbodyId).innerHTML = html ||
+    `<tr><td colspan="${columns.length}" class="sub">${emptyMsg}</td></tr>`;
+}
+
+const userColumns = [
+  {label:'User PIN',   values:e => [e.userPin], numeric:true},
+  {label:'Full Name',  values:e => [e.fullName]},
+  {label:'Program(s)', values:e => USER_PROGRAMS[e.userPin] || []}
+];
+
 function renderPageHitTable(){
-  const rows = userPageHitLog
-    .filter(e => inDateRange(e.date) && pageMatch(e.page) && programMatch(USER_PROGRAMS[e.userPin] || []))
-    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td></tr>`)
-    .join('');
-  document.getElementById('pageHitTableBody').innerHTML = rows ||
-    `<tr><td colspan="5" class="sub">No hits recorded for the selected filters.</td></tr>`;
+  renderFilterableTable({
+    tbodyId:'pageHitTableBody',
+    columns:[...userColumns,
+      {label:'Page Name', values:e => [e.page]},
+      {label:'Hit Count', values:e => [e.hits], numeric:true}],
+    rows:userPageHitLog.filter(e => inDateRange(e.date) && pageMatch(e.page) && programMatch(USER_PROGRAMS[e.userPin] || [])),
+    rowHtml:e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.page}</td><td class="num">${e.hits}</td></tr>`,
+    emptyMsg:'No hits recorded for the selected filters.'
+  });
 }
 
 // ---- User wise Dashboard View Count ----
@@ -579,12 +597,15 @@ const dashboardViewLog = [
 ].map(e => Object.assign(e, {date: dateFromDaysAgo(e.daysAgo)}));
 
 function renderDashboardViewTable(){
-  const rows = dashboardViewLog
-    .filter(e => inDateRange(e.date) && programMatch(USER_PROGRAMS[e.userPin] || []))
-    .map(e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td></tr>`)
-    .join('');
-  document.getElementById('dashboardViewTableBody').innerHTML = rows ||
-    `<tr><td colspan="5" class="sub">No views recorded for the selected filters.</td></tr>`;
+  renderFilterableTable({
+    tbodyId:'dashboardViewTableBody',
+    columns:[...userColumns,
+      {label:'Dashboard Name', values:e => [e.dashboard]},
+      {label:'View Count',     values:e => [e.views], numeric:true}],
+    rows:dashboardViewLog.filter(e => inDateRange(e.date) && programMatch(USER_PROGRAMS[e.userPin] || [])),
+    rowHtml:e => `<tr><td class="num">${e.userPin}</td><td class="name-cell">${e.fullName}</td><td class="sub">${renderProgramTags(e.userPin)}</td><td class="sub">${e.dashboard}</td><td class="num">${e.views}</td></tr>`,
+    emptyMsg:'No views recorded for the selected filters.'
+  });
 }
 
 // ---- Most Favorited Dashboards: totals are all-time; shorter ranges show favorites gained in that window ----
@@ -601,57 +622,18 @@ function favForRange(base){
 }
 
 function renderFavoritedTable(){
-  const rows = favoritedNames
-    .map((name,i) => ({name, program:favoritedPrograms[i], value:favForRange(favoritedBaseAll[i])}))
-    .filter(r => programMatch([r.program]))
-    .map(r => `<tr><td class="name-cell">${r.name}</td><td class="sub"><span class="program-tag">${r.program}</span></td><td class="num">${fmt(r.value)}</td></tr>`)
-    .join('');
-  document.getElementById('favoritedTableBody').innerHTML = rows ||
-    `<tr><td colspan="3" class="sub">No dashboards match the selected filters.</td></tr>`;
-}
-
-/* ---------------- Filter UI ---------------- */
-const filterPanel   = document.getElementById('filterPanel');
-const filterOverlay = document.getElementById('filterOverlay');
-const filterTab     = document.getElementById('filterTab');
-
-function openFilters(){
-  filterPanel.classList.add('open');
-  filterOverlay.classList.add('open');
-  filterPanel.setAttribute('aria-hidden','false');
-}
-function closeFilters(){
-  filterPanel.classList.remove('open');
-  filterOverlay.classList.remove('open');
-  filterPanel.setAttribute('aria-hidden','true');
-}
-filterTab.addEventListener('click', openFilters);
-filterOverlay.addEventListener('click', closeFilters);
-document.getElementById('filterClose').addEventListener('click', closeFilters);
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFilters(); });
-
-// populate the two multiselects
-function fillSelect(el, values){
-  el.innerHTML = values.map(v => `<option value="${v}">${v}</option>`).join('');
-}
-fillSelect(document.getElementById('fltProgram'), ALL_PROGRAMS);
-fillSelect(document.getElementById('fltPage'), ALL_PAGES);
-
-const hasSelect2 = (typeof window.jQuery !== 'undefined' && typeof window.jQuery.fn.select2 !== 'undefined');
-if (hasSelect2) {
-  jQuery('#fltProgram, #fltPage').select2({
-    dropdownParent: jQuery('#filterPanel'),
-    placeholder: function(){ return jQuery(this).data('placeholder'); },
-    width: '100%',
-    closeOnSelect: false
+  renderFilterableTable({
+    tbodyId:'favoritedTableBody',
+    columns:[
+      {label:'Dashboard',         values:r => [r.name]},
+      {label:'Dashboard Program', values:r => [r.program]},
+      {label:'Favorites',         values:r => [r.value], numeric:true}],
+    rows:favoritedNames
+      .map((name,i) => ({name, program:favoritedPrograms[i], value:favForRange(favoritedBaseAll[i])}))
+      .filter(r => programMatch([r.program])),
+    rowHtml:r => `<tr><td class="name-cell">${r.name}</td><td class="sub"><span class="program-tag">${r.program}</span></td><td class="num">${fmt(r.value)}</td></tr>`,
+    emptyMsg:'No dashboards match the selected filters.'
   });
-} else {
-  console.warn('Select2 failed to load — falling back to native multi-selects.');
-  document.querySelectorAll('#fltProgram, #fltPage').forEach(s => { s.size = 6; s.style.width = '100%'; });
-}
-
-function readSelect(id){
-  return Array.from(document.getElementById(id).selectedOptions).map(o => o.value);
 }
 
 function scopeLabel(){
@@ -660,33 +642,67 @@ function scopeLabel(){
   return `${from} — ${to}`;
 }
 
-function applyFilters(){
-  filterState.from = parseInput(document.getElementById('fltDateFrom').value);
-  filterState.to   = parseInput(document.getElementById('fltDateTo').value);
-  if (filterState.from && filterState.to && filterState.from > filterState.to) {
-    const t = filterState.from; filterState.from = filterState.to; filterState.to = t;
-  }
-  filterState.programs = readSelect('fltProgram');
-  filterState.pages    = readSelect('fltPage');
-  refreshAll();
-  closeFilters();
+/* ---------------- Date range picker ----------------
+   Lives in the top bar and applies as soon as a range is picked.
+   An empty input means "All time". */
+const rangeInput = document.getElementById('fltDateRange');
+const rangeClear = document.getElementById('fltDateClear');
+
+function showPickedRange(){
+  const {from, to} = filterState;
+  rangeInput.value = from ? `${fmtDate(from)} — ${fmtDate(to)}` : '';
+  rangeClear.hidden = !from;
 }
 
+function setDateRange(from, to){
+  filterState.from = from;
+  filterState.to   = to;
+  showPickedRange();
+  refreshAll();
+}
+
+if (window.jQuery && jQuery.fn.daterangepicker && window.moment) {
+  const today = moment(TODAY);
+  jQuery(rangeInput).daterangepicker({
+    autoUpdateInput:false,
+    opens:'left',
+    showDropdowns:true,
+    alwaysShowCalendars:true,
+    linkedCalendars:false,
+    minDate:moment(EARLIEST),
+    maxDate:today,
+    minYear:EARLIEST.getFullYear(),
+    maxYear:TODAY.getFullYear(),
+    startDate:today.clone().subtract(6,'days'),
+    endDate:today,
+    locale:{format:'DD MMM YYYY', firstDay:6},
+    ranges:{
+      'Today':        [today.clone(), today.clone()],
+      'Yesterday':    [today.clone().subtract(1,'days'), today.clone().subtract(1,'days')],
+      'Last 7 Days':  [today.clone().subtract(6,'days'), today.clone()],
+      'Last 30 Days': [today.clone().subtract(29,'days'), today.clone()],
+      'This Month':   [today.clone().startOf('month'), today.clone()],
+      'Last Month':   [today.clone().subtract(1,'month').startOf('month'), today.clone().subtract(1,'month').endOf('month')],
+      'This Year':    [today.clone().startOf('year'), today.clone()],
+      'All Time':     [moment(EARLIEST), today.clone()]
+    }
+  });
+  jQuery(rangeInput).on('apply.daterangepicker', (e, picker) => {
+    setDateRange(picker.startDate.clone().startOf('day').toDate(),
+                 picker.endDate.clone().startOf('day').toDate());
+  });
+} else {
+  console.error('Date range picker failed to load from the CDN.');
+  rangeInput.placeholder = 'Date picker unavailable — check your connection';
+  rangeInput.disabled = true;
+}
+rangeClear.addEventListener('click', () => setDateRange(null, null));
+
+// Clears the date range and every table's column dropdowns.
 function resetFilters(){
-  document.getElementById('fltDateFrom').value = '';
-  document.getElementById('fltDateTo').value = '';
-  if (hasSelect2) {
-    jQuery('#fltProgram, #fltPage').val(null).trigger('change');
-  } else {
-    document.querySelectorAll('#fltProgram option, #fltPage option').forEach(o => o.selected = false);
-  }
-  filterState.from = filterState.to = null;
-  filterState.programs = [];
-  filterState.pages = [];
-  refreshAll();
+  Object.keys(colFilterState).forEach(k => colFilterState[k].fill(''));
+  setDateRange(null, null);
 }
-
-document.getElementById('fltApply').addEventListener('click', applyFilters);
 document.getElementById('fltReset').addEventListener('click', resetFilters);
 
 // chart refresh hook — replaced once Chart.js is confirmed loaded
