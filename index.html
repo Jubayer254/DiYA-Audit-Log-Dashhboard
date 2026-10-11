@@ -50,13 +50,6 @@
   .topbar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:14px;}
   .topbar h1{font-size:25px;margin:0 0 4px;font-weight:700;letter-spacing:-.2px;}
   .topbar p{margin:0;color:var(--muted);font-size:13.5px;}
-  .refresh-pill{
-    display:flex;align-items:center;gap:7px;background:var(--card);border:1px solid var(--line);
-    padding:8px 14px;border-radius:100px;font-size:12.5px;color:var(--muted);height:fit-content;
-  }
-  .pulse{width:7px;height:7px;border-radius:50%;background:var(--teal);position:relative;}
-  .pulse::after{content:'';position:absolute;inset:-4px;border-radius:50%;border:1.5px solid var(--teal);animation:pulse 2s infinite;}
-  @keyframes pulse{0%{transform:scale(.6);opacity:1;}100%{transform:scale(1.8);opacity:0;}}
 
   .section-heading{display:flex;align-items:baseline;gap:12px;margin:0 0 4px;}
   .section-heading h2{font-size:17px;margin:0;font-weight:700;}
@@ -148,10 +141,12 @@
   }
   .btn-link:hover{opacity:.9;}
   .btn-link.solid{background:var(--primary);color:#fff;}
-  @media (max-width:600px){
-    .topbar-side{align-items:stretch;width:100%;}
-    .top-filters{flex-wrap:wrap;}
-    .top-filters .range-input-wrap{width:auto;flex:1;}
+  @media (max-width:700px){
+    .topbar{justify-content:center;text-align:center;}
+    .topbar-heading{width:100%;}
+    .topbar-side{align-items:center;width:100%;}
+    .top-filters{flex-wrap:wrap;justify-content:center;width:100%;}
+    .top-filters .range-input-wrap{width:100%;max-width:340px;}
   }
   .range-input-wrap{position:relative;}
   .range-input{
@@ -230,6 +225,22 @@
   #navToggle svg{transition:transform .22s;}
   .side-nav.open #navToggle svg{transform:rotate(180deg);}
 
+  /* Mobile: nav becomes a sticky bar across the top */
+  @media (max-width:700px){
+    .main{padding:20px 16px 40px;}
+    .side-nav,.side-nav.open{
+      position:sticky;top:0;left:auto;transform:none;width:100%;flex-direction:row;gap:4px;
+      padding:6px;border-radius:0;border-width:0 0 1px;box-shadow:0 4px 14px rgba(16,26,46,.08);
+    }
+    #navToggle,.nav-sep,.nav-backdrop{display:none;}
+    .nav-item{
+      flex:1;min-width:0;flex-direction:column;justify-content:center;gap:4px;height:auto;
+      padding:8px 4px;border-radius:12px;font-size:10.5px;white-space:normal;text-align:center;line-height:1.2;
+    }
+    .nav-item svg{width:20px;height:20px;}
+    .nav-label,.side-nav.open .nav-label{opacity:1;}
+  }
+
   /* ===================== PAGES ===================== */
   .tab-panel{display:none;}
   .tab-panel.active{display:block;animation:fadeIn .18s ease;}
@@ -269,6 +280,10 @@
   <button type="button" class="nav-item" data-page="users" title="User Activity">
     <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 010 8M22 21c0-3-2-5-4-5.6"/></svg><span class="nav-label">User Activity</span>
   </button>
+  <div class="nav-sep"></div>
+  <button type="button" class="nav-item" id="glanceBtn" title="At a glance">
+    <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg><span class="nav-label">At a glance</span>
+  </button>
 </nav>
 <div class="nav-backdrop" id="navBackdrop"></div>
 
@@ -280,14 +295,12 @@
       <p>Platform usage and dashboard performance, all in one view.</p>
     </div>
     <div class="topbar-side">
-      <div class="refresh-pill"><span class="pulse"></span> Last Updated Sep 15, 2026, 7:39 AM</div>
       <div class="top-filters">
         <div class="range-input-wrap">
           <input type="text" id="fltDateRange" class="range-input" placeholder="All time" readonly aria-label="Date range">
           <button type="button" class="range-clear" id="fltDateClear" aria-label="Clear date range" hidden>&times;</button>
         </div>
         <button type="button" class="btn-link" id="fltReset">Reset filters</button>
-        <button type="button" class="btn-link solid" id="glanceBtn">At a glance</button>
       </div>
     </div>
   </div>
@@ -819,7 +832,7 @@ window.addEventListener('hashchange', () => showPage(location.hash.slice(1)));
 
 /* ---------------- At a glance ---------------- */
 const glanceOverlay = document.getElementById('glanceOverlay');
-document.getElementById('glanceBtn').addEventListener('click', () => glanceOverlay.classList.add('show'));
+document.getElementById('glanceBtn').addEventListener('click', () => { setNav(false); glanceOverlay.classList.add('show'); });
 document.getElementById('glanceClose').addEventListener('click', () => glanceOverlay.classList.remove('show'));
 glanceOverlay.addEventListener('click', e => { if (e.target === glanceOverlay) glanceOverlay.classList.remove('show'); });
 document.addEventListener('keydown', e => { if (e.key === 'Escape') glanceOverlay.classList.remove('show'); });
