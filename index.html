@@ -46,7 +46,7 @@
   .brand-sub{font-size:10px;color:var(--muted);margin-top:1px;letter-spacing:.4px;text-transform:uppercase;}
 
   /* Main */
-  .main{max-width:1680px;margin:0 auto;padding:32px clamp(24px,4vw,64px) 50px;}
+  .main{max-width:1680px;margin:0 auto;padding:32px clamp(24px,4vw,64px) 50px clamp(124px,9vw,150px);}
   .topbar{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;flex-wrap:wrap;gap:14px;}
   .topbar h1{font-size:25px;margin:0 0 4px;font-weight:700;letter-spacing:-.2px;}
   .topbar p{margin:0;color:var(--muted);font-size:13.5px;}
@@ -88,7 +88,7 @@
   @media (max-width:900px){.g-2{grid-template-columns:1fr;}}
 
   .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:17px 19px;position:relative;overflow:hidden;}
-  .kpi{border-left:4px solid var(--accent,var(--primary));padding-left:16px;}
+  .kpi{border-left:4px solid var(--primary);padding-left:16px;}
   .kpi-label{font-size:11.5px;color:var(--muted);font-weight:500;margin-bottom:9px;}
   .kpi-value{font-size:27px;font-weight:600;line-height:1;}
   .kpi-value-text{font-family:'Inter',sans-serif;font-size:18px;font-weight:700;line-height:1.25;}
@@ -99,7 +99,7 @@
 
   .card-title{font-size:13.5px;font-weight:600;margin:0 0 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;}
   .card-title .scope{font-size:10.5px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.3px;white-space:nowrap;}
-  .chart-wrap{position:relative;width:100%;height:210px;}
+  .chart-wrap{position:relative;width:100%;height:clamp(240px,40vh,340px);}
   .chart-wrap canvas{display:block !important;width:100% !important;height:100% !important;}
   .chart-fallback{
     position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
@@ -147,8 +147,10 @@
     background:#FDE7F2;border:none;border-radius:7px;padding:9px 14px;cursor:pointer;white-space:nowrap;
   }
   .btn-link:hover{opacity:.9;}
+  .btn-link.solid{background:var(--primary);color:#fff;}
   @media (max-width:600px){
     .topbar-side{align-items:stretch;width:100%;}
+    .top-filters{flex-wrap:wrap;}
     .top-filters .range-input-wrap{width:auto;flex:1;}
   }
   .range-input-wrap{position:relative;}
@@ -201,57 +203,74 @@
   .select2-container--default .select2-results__option--highlighted[aria-selected]{background:var(--primary);}
   .select2-container{z-index:90;}
 
-  /* ===================== TABS ===================== */
-  .tabs{
-    display:flex;gap:4px;background:var(--card);border:1px solid var(--line);border-radius:12px;
-    padding:4px;margin:0 0 22px;width:fit-content;max-width:100%;overflow-x:auto;
+  /* ===================== SIDE NAV (vertical, elliptical) ===================== */
+  .side-nav{
+    position:fixed;left:16px;top:50%;transform:translateY(-50%);z-index:150;width:80px;padding:16px 10px;
+    border-radius:40px;background:var(--card);border:1px solid var(--line);display:flex;flex-direction:column;gap:8px;
+    overflow:hidden;transition:width .22s ease;box-shadow:0 10px 30px rgba(16,26,46,.12);
   }
-  .tab-btn{
-    font-family:'Inter',sans-serif;font-size:13px;font-weight:600;color:var(--muted);
-    background:none;border:none;border-radius:9px;padding:9px 18px;cursor:pointer;white-space:nowrap;
-    display:flex;align-items:center;gap:8px;
+  .side-nav.open{width:280px;}
+  .nav-item{
+    display:flex;align-items:center;gap:16px;height:56px;border:none;border-radius:28px;background:none;
+    color:var(--muted);font-family:'Inter',sans-serif;font-size:14.5px;font-weight:600;cursor:pointer;
+    padding:0 17px;white-space:nowrap;
   }
-  .tab-btn:hover{color:var(--text);background:#F5F8FC;}
-  .tab-btn.active{background:var(--primary);color:#fff;}
-  .tab-btn .tab-num{
-    font-size:10.5px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;
-    background:var(--line);color:var(--muted);
+  .nav-item:hover{background:#F5F8FC;color:var(--text);}
+  .nav-item.active{background:var(--primary);color:#fff;}
+  .nav-item svg{width:26px;height:26px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .nav-label{opacity:0;transition:opacity .15s;}
+  .side-nav.open .nav-label{opacity:1;}
+  .nav-sep{height:1px;background:var(--line);margin:2px 10px;}
+  .nav-backdrop{
+    position:fixed;inset:0;z-index:140;background:rgba(242,245,249,.35);
+    -webkit-backdrop-filter:blur(7px);backdrop-filter:blur(7px);
+    opacity:0;pointer-events:none;transition:opacity .22s ease;
   }
-  .tab-btn.active .tab-num{background:rgba(255,255,255,.25);color:#fff;}
+  .nav-backdrop.show{opacity:1;pointer-events:auto;}
+  #navToggle svg{transition:transform .22s;}
+  .side-nav.open #navToggle svg{transform:rotate(180deg);}
+
+  /* ===================== PAGES ===================== */
   .tab-panel{display:none;}
   .tab-panel.active{display:block;animation:fadeIn .18s ease;}
   @keyframes fadeIn{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:none;}}
-  @media (max-width:600px){.tabs{width:100%;}.tab-btn{flex:1;justify-content:center;padding:9px 10px;}}
-
-  /* Trends tab: charts get more room since they no longer share the page */
-  #tab-trends .chart-wrap{height:clamp(220px,calc((100vh - 330px) / 2),340px);}
-
-  /* Details tab: one table per sub-tab; each scrolls inside its card instead of stretching the page */
-  .subtabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 0 16px;overflow-x:auto;}
-  .subtab-btn{
-    font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--muted);
-    background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
-    padding:9px 14px;cursor:pointer;white-space:nowrap;
-  }
-  .subtab-btn:hover{color:var(--text);}
-  .subtab-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
-  .subtab-panel{display:none;}
-  .subtab-panel.active{display:block;animation:fadeIn .18s ease;}
-  .table-scroll{max-height:calc(100vh - 380px);min-height:240px;overflow:auto;margin:0 -19px -17px;padding:0 19px 6px;}
+  .table-scroll{max-height:380px;min-height:200px;overflow:auto;margin:0 -19px -17px;padding:0 19px 6px;}
   .table-scroll thead{position:sticky;top:0;background:var(--card);z-index:2;}
+  .stack{margin-bottom:16px;}
 
-  .snapshot-note{
-    display:flex;align-items:center;gap:6px;
-    margin:10px 0 2px;
-    color:var(--muted);font-size:11.5px;font-weight:500;
+  /* ===================== AT A GLANCE ===================== */
+  .glance-overlay{
+    position:fixed;inset:0;background:rgba(16,26,46,.5);z-index:200;display:none;
+    align-items:center;justify-content:center;padding:20px;
   }
-  .snapshot-note .info-dot{
-    width:14px;height:14px;border-radius:50%;background:var(--line);color:var(--muted);
-    display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0;
-  }
+  .glance-overlay.show{display:flex;}
+  .glance-panel{background:var(--canvas);border-radius:var(--radius);max-width:920px;width:100%;max-height:90vh;overflow:auto;padding:22px 24px;}
+  .glance-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px;}
+  .glance-head h2{font-size:17px;margin:0;font-weight:700;}
+  .glance-panel .insight-groups{align-items:stretch;}
+  .glance-panel .kpi-group{display:flex;flex-direction:column;margin-bottom:0;}
+  .glance-panel .kpi-group .card{flex:1;}
 </style>
 </head>
 <body>
+
+<!-- ===================== SIDE NAV ===================== -->
+<nav class="side-nav" id="sideNav" aria-label="Pages">
+  <button type="button" class="nav-item" id="navToggle" aria-label="Expand navigation" aria-expanded="false">
+    <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg><span class="nav-label">Collapse</span>
+  </button>
+  <div class="nav-sep"></div>
+  <button type="button" class="nav-item active" data-page="system" title="System Insights">
+    <svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="nav-label">System Insights</span>
+  </button>
+  <button type="button" class="nav-item" data-page="dashboards" title="Dashboard Insights">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="nav-label">Dashboard Insights</span>
+  </button>
+  <button type="button" class="nav-item" data-page="users" title="User Activity">
+    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 010 8M22 21c0-3-2-5-4-5.6"/></svg><span class="nav-label">User Activity</span>
+  </button>
+</nav>
+<div class="nav-backdrop" id="navBackdrop"></div>
 
 <main class="main">
 
@@ -268,219 +287,211 @@
           <button type="button" class="range-clear" id="fltDateClear" aria-label="Clear date range" hidden>&times;</button>
         </div>
         <button type="button" class="btn-link" id="fltReset">Reset filters</button>
+        <button type="button" class="btn-link solid" id="glanceBtn">At a glance</button>
       </div>
     </div>
   </div>
 
-  <!-- ===================== TABS ===================== -->
-  <nav class="tabs" role="tablist" aria-label="Dashboard sections">
-    <button type="button" class="tab-btn active" role="tab" data-tab="overview" aria-selected="true"><span class="tab-num">1</span>Overview</button>
-    <button type="button" class="tab-btn" role="tab" data-tab="trends" aria-selected="false"><span class="tab-num">2</span>Trends</button>
-    <button type="button" class="tab-btn" role="tab" data-tab="details" aria-selected="false"><span class="tab-num">3</span>Details</button>
-  </nav>
+  <!-- ===================== PAGE 1: SYSTEM INSIGHTS ===================== -->
+  <section class="tab-panel active" id="page-system" role="tabpanel">
 
-  <!-- ===================== TAB 1: OVERVIEW ===================== -->
-  <section class="tab-panel active" id="tab-overview" role="tabpanel">
+    <div class="section-heading"><h2>System Insights</h2></div>
+    <p class="section-desc">Platform traffic and the busiest pages.</p>
 
-  <!-- ===================== KPI CARDS (grouped: System vs Dashboard) ===================== -->
-
-  <!-- System Usage group — platform-level traffic & users -->
-  <div class="kpi-group" style="--group-accent:var(--primary)">
-    <div class="kpi-group-heading">
-      <span class="kpi-group-dot"></span>
-      <span class="kpi-group-title">System Usage</span>
-      <span class="kpi-group-count">&middot; Platform Traffic &amp; Users</span>
-    </div>
-    <div class="grid g-cards">
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Avg. Active Users</div>
-        <div class="kpi-value num" id="kpiAvgDAU">268</div>
-        <div class="kpi-delta flat">Avg per day</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Total Hits</div>
-        <div class="kpi-value num" id="kpiTotalHits">5,842</div>
-        <div class="kpi-delta flat">Combined site-wide traffic</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Avg. Hits</div>
-        <div class="kpi-value num">4,960</div>
-        <div class="kpi-delta flat">Baseline daily rate</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Total Registered Users</div>
-        <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
-        <div class="kpi-delta flat">All user accounts</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--primary)">
-        <div class="kpi-label">Peak Traffic Hour</div>
-        <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
-        <div class="kpi-delta flat">Busiest hour</div>
-      </div>
-    </div>
-  </div>
-  
-  <div class="kpi-group" style="--group-accent:var(--teal)">
-    <div class="kpi-group-heading">
-      <span class="kpi-group-dot"></span>
-      <span class="kpi-group-title">Dashboard Performance</span>
-      <span class="kpi-group-count">&middot; Reflects the filters</span>
-    </div>
-    <div class="grid g-cards">
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Dashboards</div>
-        <div class="kpi-value num" id="kpiDashboardsCount">128</div>
-        <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Dashboard Views</div>
-        <div class="kpi-value num" id="kpiTotalViews">182,400</div>
-        <div class="kpi-delta flat">Combined across all dashboards</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Total Favorites</div>
-        <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
-        <div class="kpi-delta flat">Saved by users</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Most Used Dashboard</div>
-        <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
-        <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views</div>
-      </div>
-      <div class="card kpi" style="--accent:var(--teal)">
-        <div class="kpi-label">Most Active User</div>
-        <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
-        <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 page hits</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ===================== INSIGHTS ===================== -->
-  <div class="section-heading" style="margin-top:26px;"><h2>Insights</h2></div>
-  <p class="section-desc">What the numbers above are actually telling you, for the selected filters.</p>
-
-  <div class="insight-groups">
-    <!-- System Usage insights -->
     <div class="kpi-group" style="--group-accent:var(--primary)">
-      <div class="kpi-group-heading">
-        <span class="kpi-group-dot"></span>
-        <span class="kpi-group-title">System Usage</span>
-      </div>
-      <div class="card">
-        <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-        <ul class="insight-list" id="sysGoodList">
-          <li><span class="insight-icon good">&#10003;</span>Dashboards Home is the most visited page overall, with 835,429 hits.</li>
-          <li><span class="insight-icon good">&#10003;</span>BHP and MF program users are the most active users.</li>
-          <li><span class="insight-icon good">&#10003;</span>75% of API requests succeed.</li>
-        </ul>
-        <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-        <ul class="insight-list" id="sysWatchList">
-          <li><span class="insight-icon watch">!</span>UPG program users generate the fewest hits overall &mdash; worth checking engagement there.</li>
-          <li><span class="insight-icon watch">!</span>One API endpoint takes up to 2.5 seconds to respond — worth checking for a bottleneck.</li>
-        </ul>
+      <div class="grid g-cards">
+        <div class="card kpi" style="--accent:var(--primary)">
+          <div class="kpi-label">Total Hits</div>
+          <div class="kpi-value num" id="kpiTotalHits">5,842</div>
+          <div class="kpi-delta flat">Combined site-wide traffic</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--primary)">
+          <div class="kpi-label">Avg. Hits</div>
+          <div class="kpi-value num">4,960</div>
+          <div class="kpi-delta flat">Baseline daily rate</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--primary)">
+          <div class="kpi-label">Peak Traffic Hour</div>
+          <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
+          <div class="kpi-delta flat">Busiest hour</div>
+        </div>
       </div>
     </div>
 
-    <!-- Dashboard Performance insights -->
+    <div class="grid g-2">
+      <div class="card">
+        <div class="card-title">Website Hits Per Day</div>
+        <div class="chart-wrap"><canvas id="chHits"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Most Visited Page (Top 10)</div>
+        <div class="chart-wrap"><canvas id="chMostVisited"></canvas></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ===================== PAGE 2: DASHBOARD INSIGHTS ===================== -->
+  <section class="tab-panel" id="page-dashboards" role="tabpanel">
+
+    <div class="section-heading"><h2>Dashboard Insights</h2></div>
+    <p class="section-desc">How dashboards are viewed, rated and favorited.</p>
+
     <div class="kpi-group" style="--group-accent:var(--teal)">
-      <div class="kpi-group-heading">
-        <span class="kpi-group-dot"></span>
-        <span class="kpi-group-title">Dashboard Performance</span>
+      <div class="grid g-cards">
+        <div class="card kpi" style="--accent:var(--teal)">
+          <div class="kpi-label">Total Dashboards</div>
+          <div class="kpi-value num" id="kpiDashboardsCount">128</div>
+          <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--teal)">
+          <div class="kpi-label">Total Dashboard Views</div>
+          <div class="kpi-value num" id="kpiTotalViews">182,400</div>
+          <div class="kpi-delta flat">Combined across all dashboards</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--teal)">
+          <div class="kpi-label">Total Favorites</div>
+          <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
+          <div class="kpi-delta flat">Saved by users</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--teal)">
+          <div class="kpi-label">Most Used Dashboard</div>
+          <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
+          <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid g-2 stack">
+      <div class="card">
+        <div class="card-title">Most Viewed Dashboards (Top 10)</div>
+        <div class="chart-wrap"><canvas id="chMostViewed"></canvas></div>
       </div>
       <div class="card">
-        <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-        <ul class="insight-list" id="dashGoodList">
-          <li><span class="insight-icon good">&#10003;</span>BRAC Program Coverage is most favorite dashboard.</li>
-          <li><span class="insight-icon good">&#10003;</span>48% of ratings given are 5 stars.</li>
-          <li><span class="insight-icon good">&#10003;</span>MF program has the highest number of dashboards.</li>
-        </ul>
-        <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-        <ul class="insight-list" id="dashWatchList">
-          <li><span class="insight-icon watch">!</span>40% of dashboards have zero favorites.</li>
-          <li><span class="insight-icon watch">!</span>UPG program has the least number of dashboards.</li>
-        </ul>
+        <div class="card-title">Dashboard Ratings Distribution</div>
+        <div class="chart-wrap"><canvas id="chRatings"></canvas></div>
       </div>
     </div>
-  </div>
+
+    <div class="card">
+      <div class="card-title">Most Favorited Dashboards</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Dashboard</th><th>Dashboard Program</th><th>Favorites</th></tr></thead>
+          <tbody id="favoritedTableBody"></tbody>
+        </table>
+      </div>
+    </div>
 
   </section>
 
-  <!-- ===================== TAB 2: TRENDS ===================== -->
-  <section class="tab-panel" id="tab-trends" role="tabpanel">
+  <!-- ===================== PAGE 3: USER ACTIVITY ===================== -->
+  <section class="tab-panel" id="page-users" role="tabpanel">
 
-  <div class="section-heading"><h2>Trends</h2></div>
-  <p class="section-desc">Traffic and dashboard performance over time.</p>
+    <div class="section-heading"><h2>User Activity</h2></div>
+    <p class="section-desc">Who's using the platform and what they open.</p>
 
-  <div class="grid g-2" style="margin-bottom:16px;">
+    <div class="kpi-group" style="--group-accent:var(--primary)">
+      <div class="grid g-cards">
+        <div class="card kpi" style="--accent:var(--primary)">
+          <div class="kpi-label">Total Registered Users</div>
+          <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
+          <div class="kpi-delta flat">All user accounts</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--primary)">
+          <div class="kpi-label">Avg. Active Users</div>
+          <div class="kpi-value num" id="kpiAvgDAU">268</div>
+          <div class="kpi-delta flat">Avg per day</div>
+        </div>
+        <div class="card kpi" style="--accent:var(--teal)">
+          <div class="kpi-label">Most Active User</div>
+          <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
+          <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 hits</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card stack">
+      <div class="card-title">Users per Page Hit Count</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th></tr></thead>
+          <tbody id="pageHitTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
     <div class="card">
-      <div class="card-title">Website Hits Per Day</div>
-      <div class="chart-wrap"><canvas id="chHits"></canvas></div>
+      <div class="card-title">User wise Dashboard View Count</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th></tr></thead>
+          <tbody id="dashboardViewTableBody"></tbody>
+        </table>
+      </div>
     </div>
-    <div class="card">
-      <div class="card-title">Most Visited Page (Top 10)</div>
-      <div class="chart-wrap"><canvas id="chMostVisited"></canvas></div>
-    </div>
-  </div>
-
-  <div class="grid g-2">
-    <div class="card">
-      <div class="card-title">Most Viewed Dashboards (Top 10)</div>
-      <div class="chart-wrap"><canvas id="chMostViewed"></canvas></div>
-    </div>
-    <div class="card">
-      <div class="card-title">Dashboard Ratings Distribution</div>
-      <div class="chart-wrap"><canvas id="chRatings"></canvas></div>
-    </div>
-  </div>
-
-  </section>
-
-  <!-- ===================== TAB 3: DETAILS ===================== -->
-  <section class="tab-panel" id="tab-details" role="tabpanel">
-
-  <div class="section-heading"><h2>Detail Tables</h2></div>
-  <p class="section-desc">Drill into who's using what, and what's happening across dashboards.</p>
-
-  <nav class="subtabs" role="tablist" aria-label="Detail tables">
-    <button type="button" class="subtab-btn active" role="tab" data-subtab="page-hits" aria-selected="true">Users per Page Hit Count</button>
-    <button type="button" class="subtab-btn" role="tab" data-subtab="dashboard-views" aria-selected="false">User wise Dashboard View Count</button>
-    <button type="button" class="subtab-btn" role="tab" data-subtab="favorites" aria-selected="false">Most Favorited Dashboards</button>
-  </nav>
-
-  <div class="card subtab-panel active" id="subtab-page-hits" role="tabpanel">
-    <div class="card-title">Users per Page Hit Count</div>
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th></tr></thead>
-        <tbody id="pageHitTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card subtab-panel" id="subtab-dashboard-views" role="tabpanel">
-    <div class="card-title">User wise Dashboard View Count</div>
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th></tr></thead>
-        <tbody id="dashboardViewTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="card subtab-panel" id="subtab-favorites" role="tabpanel">
-    <div class="card-title">Most Favorited Dashboards</div>
-    <div class="table-scroll">
-      <table>
-        <thead><tr><th>Dashboard</th><th>Dashboard Program</th><th>Favorites</th></tr></thead>
-        <tbody id="favoritedTableBody"></tbody>
-      </table>
-    </div>
-  </div>
 
   </section>
 
   <footer>DiYA Analytics Dashboard &middot; sample data for layout preview</footer>
 </main>
+
+<!-- ===================== AT A GLANCE (Insights) ===================== -->
+<div class="glance-overlay" id="glanceOverlay" role="dialog" aria-modal="true" aria-label="At a glance">
+  <div class="glance-panel">
+    <div class="glance-head">
+      <div>
+        <h2>At a glance</h2>
+        <p class="section-desc" style="margin-bottom:16px;">What the numbers are actually telling you, for the selected filters.</p>
+      </div>
+      <button type="button" class="btn-link" id="glanceClose">Close</button>
+    </div>
+
+    <div class="insight-groups">
+      <!-- System Usage insights -->
+      <div class="kpi-group" style="--group-accent:var(--primary)">
+        <div class="kpi-group-heading">
+          <span class="kpi-group-dot"></span>
+          <span class="kpi-group-title">System Usage</span>
+        </div>
+        <div class="card">
+          <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+          <ul class="insight-list" id="sysGoodList">
+            <li><span class="insight-icon good">&#10003;</span>Dashboards Home is the most visited page overall, with 835,429 hits.</li>
+            <li><span class="insight-icon good">&#10003;</span>BHP and MF program users are the most active users.</li>
+            <li><span class="insight-icon good">&#10003;</span>75% of API requests succeed.</li>
+          </ul>
+          <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+          <ul class="insight-list" id="sysWatchList">
+            <li><span class="insight-icon watch">!</span>UPG program users generate the fewest hits overall &mdash; worth checking engagement there.</li>
+            <li><span class="insight-icon watch">!</span>One API endpoint takes up to 2.5 seconds to respond — worth checking for a bottleneck.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Dashboard Performance insights -->
+      <div class="kpi-group" style="--group-accent:var(--teal)">
+        <div class="kpi-group-heading">
+          <span class="kpi-group-dot"></span>
+          <span class="kpi-group-title">Dashboard Performance</span>
+        </div>
+        <div class="card">
+          <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+          <ul class="insight-list" id="dashGoodList">
+            <li><span class="insight-icon good">&#10003;</span>BRAC Program Coverage is most favorite dashboard.</li>
+            <li><span class="insight-icon good">&#10003;</span>48% of ratings given are 5 stars.</li>
+            <li><span class="insight-icon good">&#10003;</span>MF program has the highest number of dashboards.</li>
+          </ul>
+          <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+          <ul class="insight-list" id="dashWatchList">
+            <li><span class="insight-icon watch">!</span>40% of dashboards have zero favorites.</li>
+            <li><span class="insight-icon watch">!</span>UPG program has the least number of dashboards.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -772,49 +783,48 @@ document.getElementById('fltReset').addEventListener('click', resetFilters);
 
 // chart refresh hook — replaced once Chart.js is confirmed loaded
 let refreshCharts = function(){};
-// chart resize hook — charts built inside a hidden tab need a resize when it opens
+// chart resize hook — charts built inside a hidden page need a resize when it opens
 let resizeCharts = function(){};
 
-/* ---------------- Tabs ----------------
-   Three panels (Overview / Trends / Details) share the same top-bar filters.
-   Details has its own sub-tabs, one per table. The active tab (and sub-tab)
-   is kept in the URL hash, e.g. #details/favorites, so a refresh or shared
-   link reopens it. */
-const TAB_IDS = ['overview','trends','details'];
-const SUBTAB_IDS = ['page-hits','dashboard-views','favorites'];
-let activeSubtab = SUBTAB_IDS[0];
+/* ---------------- Side nav + pages ----------------
+   Three pages (System / Dashboards / Users) share the same top-bar filters.
+   The active page is kept in the URL hash, e.g. #users. */
+const PAGE_IDS = ['system','dashboards','users'];
 
-function setActive(btnSelector, dataKey, panelSelector, panelPrefix, id){
-  document.querySelectorAll(btnSelector).forEach(b => {
-    const on = b.dataset[dataKey] === id;
-    b.classList.toggle('active', on);
-    b.setAttribute('aria-selected', on);
-  });
-  document.querySelectorAll(panelSelector).forEach(p =>
-    p.classList.toggle('active', p.id === `${panelPrefix}${id}`));
+function showPage(id){
+  if (!PAGE_IDS.includes(id)) id = 'system';
+  document.querySelectorAll('.nav-item[data-page]').forEach(b =>
+    b.classList.toggle('active', b.dataset.page === id));
+  document.querySelectorAll('.tab-panel').forEach(p =>
+    p.classList.toggle('active', p.id === `page-${id}`));
+  if (location.hash !== `#${id}`) history.replaceState(null, '', `#${id}`);
+  requestAnimationFrame(() => resizeCharts());
 }
 
-function showTab(id, subId){
-  if (!TAB_IDS.includes(id)) id = 'overview';
-  if (SUBTAB_IDS.includes(subId)) activeSubtab = subId;
-  setActive('.tab-btn', 'tab', '.tab-panel', 'tab-', id);
-  setActive('.subtab-btn', 'subtab', '.subtab-panel', 'subtab-', activeSubtab);
-  const hash = id === 'details' ? `#details/${activeSubtab}` : `#${id}`;
-  if (location.hash !== hash) history.replaceState(null, '', hash);
-  if (id === 'trends') requestAnimationFrame(() => resizeCharts());
+const sideNav = document.getElementById('sideNav');
+const navToggle = document.getElementById('navToggle');
+const navBackdrop = document.getElementById('navBackdrop');
+function setNav(open){
+  sideNav.classList.toggle('open', open);
+  navBackdrop.classList.toggle('show', open);
+  navToggle.setAttribute('aria-expanded', open);
+  navToggle.setAttribute('aria-label', open ? 'Collapse navigation' : 'Expand navigation');
 }
+navToggle.addEventListener('click', () => setNav(!sideNav.classList.contains('open')));
+navBackdrop.addEventListener('click', () => setNav(false));
+document.addEventListener('keydown', e => { if (e.key === 'Escape') setNav(false); });
+document.querySelectorAll('.nav-item[data-page]').forEach(b =>
+  b.addEventListener('click', () => { showPage(b.dataset.page); setNav(false); }));
+window.addEventListener('hashchange', () => showPage(location.hash.slice(1)));
 
-function showTabFromHash(){
-  const [id, subId] = location.hash.slice(1).split('/');
-  showTab(id, subId);
-}
+/* ---------------- At a glance ---------------- */
+const glanceOverlay = document.getElementById('glanceOverlay');
+document.getElementById('glanceBtn').addEventListener('click', () => glanceOverlay.classList.add('show'));
+document.getElementById('glanceClose').addEventListener('click', () => glanceOverlay.classList.remove('show'));
+glanceOverlay.addEventListener('click', e => { if (e.target === glanceOverlay) glanceOverlay.classList.remove('show'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') glanceOverlay.classList.remove('show'); });
 
-document.querySelectorAll('.tab-btn').forEach(b =>
-  b.addEventListener('click', () => showTab(b.dataset.tab)));
-document.querySelectorAll('.subtab-btn').forEach(b =>
-  b.addEventListener('click', () => showTab('details', b.dataset.subtab)));
-window.addEventListener('hashchange', showTabFromHash);
-showTabFromHash();
+showPage(location.hash.slice(1));
 
 function refreshAll(){
   renderPageHitTable();
