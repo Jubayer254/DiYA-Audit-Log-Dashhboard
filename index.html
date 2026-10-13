@@ -249,18 +249,43 @@
   .table-scroll thead{position:sticky;top:0;background:var(--card);z-index:2;}
   .stack{margin-bottom:16px;}
 
-  /* ===================== AT A GLANCE ===================== */
-  .glance-overlay{
-    position:fixed;inset:0;background:rgba(16,26,46,.5);z-index:200;display:none;
-    align-items:center;justify-content:center;padding:20px;
+  /* ===================== OVERVIEW TOP ROW: KPI columns + At a glance ===================== */
+  .overview-top{display:grid;grid-template-columns:minmax(0,2fr) minmax(340px,1fr);gap:16px;margin-bottom:28px;align-items:stretch;}
+  @media (max-width:1250px){.overview-top{grid-template-columns:1fr;}}
+
+  /* KPI columns (one narrow vertical card per group) */
+  .kpi-columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;align-items:stretch;}
+  @media (max-width:700px){.kpi-columns{grid-template-columns:1fr;}}
+  .kpi-col{border-top:4px solid var(--group-accent);display:flex;flex-direction:column;padding:18px 22px;}
+  .kpi-col .kpi-group-heading{margin-bottom:6px;}
+  .kpi-row{flex:1;display:flex;flex-direction:column;justify-content:center;padding:12px 0;border-top:1px solid #EEF1F6;}
+  .kpi-group-heading + .kpi-row{border-top:none;}
+  .kpi-row .kpi-label{margin-bottom:6px;}
+  .kpi-row .kpi-value{font-size:24px;}
+  .kpi-row .kpi-value-text{font-size:17px;}
+  .kpi-row .kpi-delta{margin-top:6px;}
+
+  /* At a glance card */
+  .glance-card{display:flex;flex-direction:column;}
+  .glance-card .card-title{margin-bottom:4px;}
+  .glance-card .section-desc{margin:0 0 12px;}
+  .glance-card .insight-subheading{margin-top:2px;}
+  /* narrow side column: stack "Going well" above "Worth a look" */
+  @media (min-width:1251px){.glance-card .insight-columns{grid-template-columns:1fr;gap:6px;}}
+
+  /* ===================== SUB-TABS (At a glance + Detail Tables) ===================== */
+  .subtabs{display:flex;gap:2px;border-bottom:1px solid var(--line);margin:0 0 16px;overflow-x:auto;overflow-y:hidden;}
+  .subtab-btn{
+    font-family:'Inter',sans-serif;font-size:12.5px;font-weight:600;color:var(--muted);
+    background:none;border:none;border-bottom:2px solid transparent;margin-bottom:-1px;
+    padding:9px 14px;cursor:pointer;white-space:nowrap;display:flex;align-items:center;gap:7px;
   }
-  .glance-overlay.show{display:flex;}
-  .glance-panel{background:var(--canvas);border-radius:var(--radius);max-width:920px;width:100%;max-height:90vh;overflow:auto;padding:22px 24px;}
-  .glance-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:4px;}
-  .glance-head h2{font-size:17px;margin:0;font-weight:700;}
-  .glance-panel .insight-groups{align-items:stretch;}
-  .glance-panel .kpi-group{display:flex;flex-direction:column;margin-bottom:0;}
-  .glance-panel .kpi-group .card{flex:1;}
+  .subtab-btn:hover{color:var(--text);}
+  .subtab-btn.active{color:var(--primary);border-bottom-color:var(--primary);}
+  .subtab-btn .kpi-group-dot{width:8px;height:8px;}
+  .subtab-panel{display:none;}
+  .subtab-panel.active{display:block;animation:fadeIn .18s ease;}
+  #page-tables .table-scroll{max-height:calc(100vh - 290px);min-height:240px;}
 </style>
 </head>
 <body>
@@ -271,18 +296,11 @@
     <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg><span class="nav-label">Collapse</span>
   </button>
   <div class="nav-sep"></div>
-  <button type="button" class="nav-item active" data-page="system" title="System Insights">
-    <svg viewBox="0 0 24 24"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="nav-label">System Insights</span>
+  <button type="button" class="nav-item active" data-page="overview" title="Overview">
+    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="nav-label">Overview</span>
   </button>
-  <button type="button" class="nav-item" data-page="dashboards" title="Dashboard Insights">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg><span class="nav-label">Dashboard Insights</span>
-  </button>
-  <button type="button" class="nav-item" data-page="users" title="User Activity">
-    <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="4"/><path d="M2 21c0-4 3-6 7-6s7 2 7 6M17 4a4 4 0 010 8M22 21c0-3-2-5-4-5.6"/></svg><span class="nav-label">User Activity</span>
-  </button>
-  <div class="nav-sep"></div>
-  <button type="button" class="nav-item" id="glanceBtn" title="At a glance">
-    <svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6L3.3 9.3l6.1-.7z"/></svg><span class="nav-label">At a glance</span>
+  <button type="button" class="nav-item" data-page="tables" title="Detail Tables">
+    <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M3 15h18M9 10v10"/></svg><span class="nav-label">Detail Tables</span>
   </button>
 </nav>
 <div class="nav-backdrop" id="navBackdrop"></div>
@@ -305,33 +323,144 @@
     </div>
   </div>
 
-  <!-- ===================== PAGE 1: SYSTEM INSIGHTS ===================== -->
-  <section class="tab-panel active" id="page-system" role="tabpanel">
+  <!-- ===================== PAGE 1: OVERVIEW ===================== -->
+  <section class="tab-panel active" id="page-overview" role="tabpanel">
 
-    <div class="section-heading"><h2>System Insights</h2></div>
-    <p class="section-desc">Platform traffic and the busiest pages.</p>
+    <!-- Top row: KPI columns (left) + At a glance (right) -->
+    <div class="overview-top">
 
-    <div class="kpi-group" style="--group-accent:var(--primary)">
-      <div class="grid g-cards">
-        <div class="card kpi" style="--accent:var(--primary)">
+    <!-- KPI columns: one narrow vertical card per group -->
+    <div class="kpi-columns">
+      <div class="card kpi-col" style="--group-accent:var(--primary)">
+        <div class="kpi-group-heading">
+          <span class="kpi-group-dot"></span>
+          <span class="kpi-group-title">System Usage</span>
+        </div>
+        <div class="kpi-row">
           <div class="kpi-label">Total Hits</div>
           <div class="kpi-value num" id="kpiTotalHits">5,842</div>
           <div class="kpi-delta flat">Combined site-wide traffic</div>
         </div>
-        <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-row">
           <div class="kpi-label">Avg. Hits</div>
           <div class="kpi-value num">4,960</div>
           <div class="kpi-delta flat">Baseline daily rate</div>
         </div>
-        <div class="card kpi" style="--accent:var(--primary)">
+        <div class="kpi-row">
           <div class="kpi-label">Peak Traffic Hour</div>
           <div class="kpi-value kpi-value-text">4:00 PM - 5:00 PM</div>
           <div class="kpi-delta flat">Busiest hour</div>
         </div>
       </div>
+
+      <div class="card kpi-col" style="--group-accent:var(--teal)">
+        <div class="kpi-group-heading">
+          <span class="kpi-group-dot"></span>
+          <span class="kpi-group-title">Dashboards</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Total Dashboards</div>
+          <div class="kpi-value num" id="kpiDashboardsCount">128</div>
+          <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Total Dashboard Views</div>
+          <div class="kpi-value num" id="kpiTotalViews">182,400</div>
+          <div class="kpi-delta flat">Combined across all dashboards</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Total Favorites</div>
+          <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
+          <div class="kpi-delta flat">Saved by users</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Most Used Dashboard</div>
+          <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
+          <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views</div>
+        </div>
+      </div>
+
+      <div class="card kpi-col" style="--group-accent:var(--violet)">
+        <div class="kpi-group-heading">
+          <span class="kpi-group-dot"></span>
+          <span class="kpi-group-title">Users</span>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Total Registered Users</div>
+          <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
+          <div class="kpi-delta flat">All user accounts</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Avg. Active Users</div>
+          <div class="kpi-value num" id="kpiAvgDAU">268</div>
+          <div class="kpi-delta flat">Avg per day</div>
+        </div>
+        <div class="kpi-row">
+          <div class="kpi-label">Most Active User</div>
+          <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
+          <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 hits</div>
+        </div>
+      </div>
     </div>
 
-    <div class="grid g-2">
+    <!-- At a glance (insights), one tab per group -->
+    <div class="card glance-card">
+      <div class="card-title">At a glance</div>
+      <p class="section-desc">What the numbers are actually telling you, for the selected filters.</p>
+
+      <nav class="subtabs" role="tablist" aria-label="At a glance">
+        <button type="button" class="subtab-btn active" role="tab" data-target="glance-system" aria-selected="true"><span class="kpi-group-dot" style="--group-accent:var(--primary)"></span>System Usage</button>
+        <button type="button" class="subtab-btn" role="tab" data-target="glance-dashboards" aria-selected="false"><span class="kpi-group-dot" style="--group-accent:var(--teal)"></span>Dashboard Performance</button>
+      </nav>
+
+      <div class="subtab-panel active" id="glance-system" role="tabpanel">
+        <div class="insight-columns">
+          <div>
+            <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+            <ul class="insight-list" id="sysGoodList">
+              <li><span class="insight-icon good">&#10003;</span>Dashboards Home is the most visited page overall, with 835,429 hits.</li>
+              <li><span class="insight-icon good">&#10003;</span>BHP and MF program users are the most active users.</li>
+              <li><span class="insight-icon good">&#10003;</span>75% of API requests succeed.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+            <ul class="insight-list" id="sysWatchList">
+              <li><span class="insight-icon watch">!</span>UPG program users generate the fewest hits overall &mdash; worth checking engagement there.</li>
+              <li><span class="insight-icon watch">!</span>One API endpoint takes up to 2.5 seconds to respond — worth checking for a bottleneck.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="subtab-panel" id="glance-dashboards" role="tabpanel">
+        <div class="insight-columns">
+          <div>
+            <div class="insight-subheading" style="color:var(--teal)">Going well</div>
+            <ul class="insight-list" id="dashGoodList">
+              <li><span class="insight-icon good">&#10003;</span>BRAC Program Coverage is most favorite dashboard.</li>
+              <li><span class="insight-icon good">&#10003;</span>48% of ratings given are 5 stars.</li>
+              <li><span class="insight-icon good">&#10003;</span>MF program has the highest number of dashboards.</li>
+            </ul>
+          </div>
+          <div>
+            <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
+            <ul class="insight-list" id="dashWatchList">
+              <li><span class="insight-icon watch">!</span>40% of dashboards have zero favorites.</li>
+              <li><span class="insight-icon watch">!</span>UPG program has the least number of dashboards.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    </div><!-- /.overview-top -->
+
+    <!-- Charts -->
+    <div class="section-heading"><h2>Trends</h2></div>
+    <p class="section-desc">Traffic and dashboard performance over time.</p>
+
+    <div class="grid g-2 stack">
       <div class="card">
         <div class="card-title">Website Hits Per Day</div>
         <div class="chart-wrap"><canvas id="chHits"></canvas></div>
@@ -342,40 +471,7 @@
       </div>
     </div>
 
-  </section>
-
-  <!-- ===================== PAGE 2: DASHBOARD INSIGHTS ===================== -->
-  <section class="tab-panel" id="page-dashboards" role="tabpanel">
-
-    <div class="section-heading"><h2>Dashboard Insights</h2></div>
-    <p class="section-desc">How dashboards are viewed, rated and favorited.</p>
-
-    <div class="kpi-group" style="--group-accent:var(--teal)">
-      <div class="grid g-cards">
-        <div class="card kpi" style="--accent:var(--teal)">
-          <div class="kpi-label">Total Dashboards</div>
-          <div class="kpi-value num" id="kpiDashboardsCount">128</div>
-          <div class="kpi-delta flat" id="kpiDashboardsSub">94 active &middot; 73%</div>
-        </div>
-        <div class="card kpi" style="--accent:var(--teal)">
-          <div class="kpi-label">Total Dashboard Views</div>
-          <div class="kpi-value num" id="kpiTotalViews">182,400</div>
-          <div class="kpi-delta flat">Combined across all dashboards</div>
-        </div>
-        <div class="card kpi" style="--accent:var(--teal)">
-          <div class="kpi-label">Total Favorites</div>
-          <div class="kpi-value num" id="kpiTotalFavorites">3,210</div>
-          <div class="kpi-delta flat">Saved by users</div>
-        </div>
-        <div class="card kpi" style="--accent:var(--teal)">
-          <div class="kpi-label">Most Used Dashboard</div>
-          <div class="kpi-value kpi-value-text" id="kpiMostUsedDashboard">District Health Coverage</div>
-          <div class="kpi-delta flat" id="kpiMostUsedDashboardSub">5,186 views</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="grid g-2 stack">
+    <div class="grid g-2">
       <div class="card">
         <div class="card-title">Most Viewed Dashboards (Top 10)</div>
         <div class="chart-wrap"><canvas id="chMostViewed"></canvas></div>
@@ -386,7 +482,41 @@
       </div>
     </div>
 
-    <div class="card">
+  </section>
+
+  <!-- ===================== PAGE 2: DETAIL TABLES ===================== -->
+  <section class="tab-panel" id="page-tables" role="tabpanel">
+
+    <div class="section-heading"><h2>Detail Tables</h2></div>
+    <p class="section-desc">Drill into who's using what, and what's happening across dashboards.</p>
+
+    <nav class="subtabs" role="tablist" aria-label="Detail tables">
+      <button type="button" class="subtab-btn active" role="tab" data-target="table-page-hits" aria-selected="true">Users per Page Hit Count</button>
+      <button type="button" class="subtab-btn" role="tab" data-target="table-dashboard-views" aria-selected="false">User wise Dashboard View Count</button>
+      <button type="button" class="subtab-btn" role="tab" data-target="table-favorites" aria-selected="false">Most Favorited Dashboards</button>
+    </nav>
+
+    <div class="card subtab-panel active" id="table-page-hits" role="tabpanel">
+      <div class="card-title">Users per Page Hit Count</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th></tr></thead>
+          <tbody id="pageHitTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card subtab-panel" id="table-dashboard-views" role="tabpanel">
+      <div class="card-title">User wise Dashboard View Count</div>
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th></tr></thead>
+          <tbody id="dashboardViewTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="card subtab-panel" id="table-favorites" role="tabpanel">
       <div class="card-title">Most Favorited Dashboards</div>
       <div class="table-scroll">
         <table>
@@ -398,113 +528,8 @@
 
   </section>
 
-  <!-- ===================== PAGE 3: USER ACTIVITY ===================== -->
-  <section class="tab-panel" id="page-users" role="tabpanel">
-
-    <div class="section-heading"><h2>User Activity</h2></div>
-    <p class="section-desc">Who's using the platform and what they open.</p>
-
-    <div class="kpi-group" style="--group-accent:var(--primary)">
-      <div class="grid g-cards">
-        <div class="card kpi" style="--accent:var(--primary)">
-          <div class="kpi-label">Total Registered Users</div>
-          <div class="kpi-value num" id="kpiRegisteredUsers">2,340</div>
-          <div class="kpi-delta flat">All user accounts</div>
-        </div>
-        <div class="card kpi" style="--accent:var(--primary)">
-          <div class="kpi-label">Avg. Active Users</div>
-          <div class="kpi-value num" id="kpiAvgDAU">268</div>
-          <div class="kpi-delta flat">Avg per day</div>
-        </div>
-        <div class="card kpi" style="--accent:var(--teal)">
-          <div class="kpi-label">Most Active User</div>
-          <div class="kpi-value kpi-value-text" id="kpiMostActiveUser">Nasrin Begum</div>
-          <div class="kpi-delta flat" id="kpiMostActiveUserSub">142 hits</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="card stack">
-      <div class="card-title">Users per Page Hit Count</div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Page Name</th><th>Hit Count</th></tr></thead>
-          <tbody id="pageHitTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="card-title">User wise Dashboard View Count</div>
-      <div class="table-scroll">
-        <table>
-          <thead><tr><th>User PIN</th><th>Full Name</th><th>Program(s)</th><th>Dashboard Name</th><th>View Count</th></tr></thead>
-          <tbody id="dashboardViewTableBody"></tbody>
-        </table>
-      </div>
-    </div>
-
-  </section>
-
   <footer>DiYA Analytics Dashboard &middot; sample data for layout preview</footer>
 </main>
-
-<!-- ===================== AT A GLANCE (Insights) ===================== -->
-<div class="glance-overlay" id="glanceOverlay" role="dialog" aria-modal="true" aria-label="At a glance">
-  <div class="glance-panel">
-    <div class="glance-head">
-      <div>
-        <h2>At a glance</h2>
-        <p class="section-desc" style="margin-bottom:16px;">What the numbers are actually telling you, for the selected filters.</p>
-      </div>
-      <button type="button" class="btn-link" id="glanceClose">Close</button>
-    </div>
-
-    <div class="insight-groups">
-      <!-- System Usage insights -->
-      <div class="kpi-group" style="--group-accent:var(--primary)">
-        <div class="kpi-group-heading">
-          <span class="kpi-group-dot"></span>
-          <span class="kpi-group-title">System Usage</span>
-        </div>
-        <div class="card">
-          <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-          <ul class="insight-list" id="sysGoodList">
-            <li><span class="insight-icon good">&#10003;</span>Dashboards Home is the most visited page overall, with 835,429 hits.</li>
-            <li><span class="insight-icon good">&#10003;</span>BHP and MF program users are the most active users.</li>
-            <li><span class="insight-icon good">&#10003;</span>75% of API requests succeed.</li>
-          </ul>
-          <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-          <ul class="insight-list" id="sysWatchList">
-            <li><span class="insight-icon watch">!</span>UPG program users generate the fewest hits overall &mdash; worth checking engagement there.</li>
-            <li><span class="insight-icon watch">!</span>One API endpoint takes up to 2.5 seconds to respond — worth checking for a bottleneck.</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Dashboard Performance insights -->
-      <div class="kpi-group" style="--group-accent:var(--teal)">
-        <div class="kpi-group-heading">
-          <span class="kpi-group-dot"></span>
-          <span class="kpi-group-title">Dashboard Performance</span>
-        </div>
-        <div class="card">
-          <div class="insight-subheading" style="color:var(--teal)">Going well</div>
-          <ul class="insight-list" id="dashGoodList">
-            <li><span class="insight-icon good">&#10003;</span>BRAC Program Coverage is most favorite dashboard.</li>
-            <li><span class="insight-icon good">&#10003;</span>48% of ratings given are 5 stars.</li>
-            <li><span class="insight-icon good">&#10003;</span>MF program has the highest number of dashboards.</li>
-          </ul>
-          <div class="insight-subheading" style="color:var(--coral)">Worth a look</div>
-          <ul class="insight-list" id="dashWatchList">
-            <li><span class="insight-icon watch">!</span>40% of dashboards have zero favorites.</li>
-            <li><span class="insight-icon watch">!</span>UPG program has the least number of dashboards.</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
@@ -800,12 +825,12 @@ let refreshCharts = function(){};
 let resizeCharts = function(){};
 
 /* ---------------- Side nav + pages ----------------
-   Three pages (System / Dashboards / Users) share the same top-bar filters.
-   The active page is kept in the URL hash, e.g. #users. */
-const PAGE_IDS = ['system','dashboards','users'];
+   Two pages (Overview / Detail Tables) share the same top-bar filters.
+   The active page is kept in the URL hash, e.g. #tables. */
+const PAGE_IDS = ['overview','tables'];
 
 function showPage(id){
-  if (!PAGE_IDS.includes(id)) id = 'system';
+  if (!PAGE_IDS.includes(id)) id = 'overview';
   document.querySelectorAll('.nav-item[data-page]').forEach(b =>
     b.classList.toggle('active', b.dataset.page === id));
   document.querySelectorAll('.tab-panel').forEach(p =>
@@ -830,12 +855,22 @@ document.querySelectorAll('.nav-item[data-page]').forEach(b =>
   b.addEventListener('click', () => { showPage(b.dataset.page); setNav(false); }));
 window.addEventListener('hashchange', () => showPage(location.hash.slice(1)));
 
-/* ---------------- At a glance ---------------- */
-const glanceOverlay = document.getElementById('glanceOverlay');
-document.getElementById('glanceBtn').addEventListener('click', () => { setNav(false); glanceOverlay.classList.add('show'); });
-document.getElementById('glanceClose').addEventListener('click', () => glanceOverlay.classList.remove('show'));
-glanceOverlay.addEventListener('click', e => { if (e.target === glanceOverlay) glanceOverlay.classList.remove('show'); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') glanceOverlay.classList.remove('show'); });
+/* ---------------- Sub-tabs ----------------
+   Any .subtabs nav switches between the .subtab-panel elements named by
+   its buttons' data-target (used by At a glance and the Detail Tables page). */
+document.querySelectorAll('.subtabs').forEach(nav => {
+  const buttons = [...nav.querySelectorAll('.subtab-btn')];
+  nav.addEventListener('click', e => {
+    const btn = e.target.closest('.subtab-btn');
+    if (!btn) return;
+    buttons.forEach(b => {
+      const on = b === btn;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on);
+      document.getElementById(b.dataset.target).classList.toggle('active', on);
+    });
+  });
+});
 
 showPage(location.hash.slice(1));
 
